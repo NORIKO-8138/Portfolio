@@ -212,6 +212,9 @@ section { padding-block: 96px 0; }
 }
 .case-fig--logo figcaption { background: rgba(0, 14, 43, .45); }
 .case-play { position: relative; display: block; max-width: min(100%, 720px); text-decoration: none; color: var(--white); }
+/* Full-bleed banners: the project image fills the whole 16:9 frame and links to the video */
+.case-fig:not(.case-fig--contain) .case-play { max-width: none; width: 100%; height: 100%; }
+.case-fig:not(.case-fig--contain) .case-play img { width: 100%; height: 100%; object-fit: cover; }
 .case-play img { max-width: 100%; transition: filter .2s; }
 .case-play:hover img, .case-play:focus-visible img { filter: brightness(.75); }
 .play-btn {
