@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
 <style>
-/* Layout: 첫 화면은 이름 중심의 다크 카드(좌: 텍스트, 우: 블루 비주얼), 이하 템플릿 섹션 구성.
+/* Layout: 첫 화면은 이름 중심의 다크 카드(좌: 텍스트, 우: 비움), 이하 템플릿 섹션 구성.
    브랜드 가이드(Blue·White·Grey·Dark blue·Black). 영문·숫자 Manrope, 한글 Noto Sans KR */
 :root {
   --blue: #0d63ea;
@@ -65,8 +65,11 @@ body::before {
 }
 a { color: inherit; }
 p, li, dd { text-wrap: pretty; }
+/* Short lines (list items, captions, card summaries): balance so no line ends with a lone word */
+li, .tl-sum, .tl-period, .tl-role, .step p, .comp-case, .case-lead, .kr-cap, .ai-note, .sec-lead { text-wrap: balance; }
 .nowrap { white-space: nowrap; }
 :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+[id] { scroll-margin-top: 72px; }
 
 .wrap {
   max-width: var(--max);
@@ -88,6 +91,7 @@ h1, h2, h3, h4, .stat-val, .tl-year, .contact-mail, blockquote {
   letter-spacing: .02em; white-space: nowrap;
 }
 .pill-sm { padding: 2px 10px; font-size: 12px; border-width: 1px; }
+.pill-fill { background: var(--blue); border-color: var(--blue); color: var(--white); }
 
 /* Header */
 .topbar {
@@ -109,6 +113,7 @@ section { padding-block: 96px 0; }
 .sec-head { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; margin-bottom: 40px; }
 .sec-head .pill { color: var(--accent-text); }
 .sec-title { font-size: clamp(28px, 3.6vw, 40px); line-height: 1.2; margin: 0; }
+.sec-lead { margin: -16px 0 32px; max-width: 46em; color: var(--muted); font-size: 17px; }
 .sec-end { display: block; width: 48px; height: 3px; border-radius: 2px; background: var(--blue); margin-top: 56px; }
 
 /* Hero: name-led dark card */
@@ -125,12 +130,11 @@ section { padding-block: 96px 0; }
 .hero-name { font-size: clamp(60px, 9vw, 116px); line-height: .9; margin: 0; letter-spacing: -.035em; }
 .hero-name span { display: block; }
 .hero-name span:last-child { color: var(--blue-bright); }
-.hero-role { margin: 0; color: var(--on-dark-muted); font-size: 16px; line-height: 1.6; }
+.hero-role { margin: 0; color: var(--on-dark-muted); font-size: 16px; font-weight: 600; line-height: 1.6; letter-spacing: .01em; }
 .hero-intro { margin: 0; font-size: 17px; font-weight: 500; line-height: 1.75; max-width: 30em; }
 .hero-intro em { font-style: normal; color: var(--blue-bright); font-weight: 700; }
-.hero-stats { display: flex; gap: 48px; flex-wrap: wrap; margin-top: 4px; }
+.hero-stats { display: flex; gap: 56px; flex-wrap: wrap; margin-top: 4px; }
 .hero-stat b { display: block; font-size: 46px; font-weight: 800; line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
-.hero-stat i { font-style: normal; color: var(--blue-bright); }
 .hero-stat small { display: block; margin-top: 10px; font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--on-dark-muted); }
 
 /* Index */
@@ -140,7 +144,7 @@ section { padding-block: 96px 0; }
   display: flex; gap: 16px; align-items: baseline; padding: 14px 0;
   border-bottom: 1px solid var(--line); text-decoration: none; font-weight: 700; font-size: 17px;
 }
-.toc li:last-child a { border-bottom: 0; }
+.toc li:nth-last-child(-n+2) a { border-bottom: 0; }
 .toc a:hover span:last-child { color: var(--accent-text); }
 .toc .num { color: var(--accent-text); font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
 
@@ -151,7 +155,7 @@ section { padding-block: 96px 0; }
 .about p { margin: 0 0 16px; color: var(--muted); font-size: 17px; }
 .about p:last-child { margin-bottom: 0; }
 
-/* Value: dark blue card */
+/* How I work: dark blue card with four steps */
 .value {
   background: var(--navy); color: var(--white); border-radius: var(--radius-lg);
   padding: 72px 40px; text-align: center;
@@ -159,20 +163,31 @@ section { padding-block: 96px 0; }
 .value .pill { color: var(--on-dark-muted); }
 .value blockquote { font-size: clamp(26px, 4vw, 46px); line-height: 1.3; margin: 24px auto 0; max-width: 16em; }
 .value blockquote span { color: var(--blue-bright); }
-.value p { color: var(--on-dark-muted); max-width: 36em; margin: 24px auto 0; }
+.value > p { color: var(--on-dark-muted); max-width: 46em; margin: 24px auto 0; text-wrap: balance; }
+.steps {
+  list-style: none; margin: 44px auto 0; padding: 0; max-width: 980px; text-align: left;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px;
+}
+.step { background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .14); border-radius: var(--radius); padding: 22px 20px; min-width: 0; }
+.step b { display: block; color: var(--blue-bright); font-size: 13px; font-weight: 800; letter-spacing: .12em; }
+.step h4 { margin: 8px 0 6px; font-size: 18px; line-height: 1.35; }
+.step p { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--on-dark-muted); }
 
 /* Competencies */
 .comp-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.comp { background: var(--surface-soft); border-radius: var(--radius); padding: 28px; min-width: 0; }
+.comp { background: var(--surface-soft); border-radius: var(--radius); padding: 28px; min-width: 0; display: flex; flex-direction: column; }
 .comp-icon { width: 44px; height: 44px; border-radius: 50%; background: var(--blue); display: grid; place-items: center; }
 .comp svg { width: 22px; height: 22px; stroke: var(--white); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .comp h4 { font-size: 18px; margin: 18px 0 12px; line-height: 1.4; }
 .comp ul { margin: 0; padding-left: 1.1em; color: var(--muted); font-size: 14.5px; line-height: 1.65; display: grid; gap: 6px; }
+.comp-case { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--line); font-size: 13.5px; line-height: 1.6; color: var(--muted); }
+.comp-case b { display: block; color: var(--accent-text); font-size: 12px; font-weight: 700; letter-spacing: .08em; margin-bottom: 2px; }
 
 /* Cases */
 .cases { display: grid; gap: 20px; }
+/* One column: image, story, then Key Results as a band across the bottom */
 .case {
-  display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 8px;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px;
   background: var(--surface-soft); border-radius: var(--radius-lg); padding: 8px;
 }
 /* Optional case image: set project.image = { src, alt, credit } to show a 16:9 banner */
@@ -184,6 +199,18 @@ section { padding-block: 96px 0; }
 /* Small banners with text: show whole, near natural size, on navy instead of cropping */
 .case-fig--contain { aspect-ratio: auto; background: var(--navy); display: grid; place-items: center; padding: 40px 24px 48px; }
 .case-fig--contain img { width: auto; height: auto; max-width: min(100%, 720px); border-radius: 12px; }
+/* Logos drawn for white: keep a white panel in both themes, shown whole at a modest size */
+.case-fig--logo {
+  aspect-ratio: auto; background: #ffffff; padding: 40px 24px 48px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 32px 56px;
+}
+.case-fig--logo img { width: auto; height: auto; max-width: min(100%, 420px); }
+.case-fig--logo .fig-side { height: 260px; max-width: 100%; border-radius: 10px; box-shadow: 0 6px 20px rgba(0, 14, 43, .18); }
+@media (max-width: 640px) {
+  .case-fig--logo { padding: 28px 16px 44px; gap: 24px; }
+  .case-fig--logo .fig-side { height: 220px; }
+}
+.case-fig--logo figcaption { background: rgba(0, 14, 43, .45); }
 .case-play { position: relative; display: block; max-width: min(100%, 720px); text-decoration: none; color: var(--white); }
 .case-play img { max-width: 100%; transition: filter .2s; }
 .case-play:hover img, .case-play:focus-visible img { filter: brightness(.75); }
@@ -205,35 +232,65 @@ section { padding-block: 96px 0; }
   .play-btn svg { width: 20px; height: 20px; margin-left: 3px; }
   .play-label { left: 50%; translate: -50% 0; bottom: -32px; font-size: 12px; white-space: nowrap; }
 }
+/* Extra videos for a case: small play links under the banner */
+.case-links { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 20px 0; }
+.case-link {
+  display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+  font-size: 14px; font-weight: 700; color: var(--accent-text);
+  border: 1.5px solid var(--line); border-radius: 999px; padding: 6px 16px 6px 12px;
+}
+.case-link:hover { border-color: var(--accent-text); }
+.case-link svg { width: 14px; height: 14px; fill: currentColor; flex: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .case-fig figcaption {
   position: absolute; right: 12px; bottom: 12px; font-size: 11px; color: var(--white);
   background: rgba(0, 14, 43, .6); padding: 2px 8px; border-radius: 999px;
 }
-.case-main { padding: 32px 28px; min-width: 0; }
+.case-main { padding: 32px 32px 24px; min-width: 0; }
+.case-main .case-lead, .case-main dl, .case-more { max-width: 52em; }
 .case-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 16px; color: var(--accent-text); }
 .case-top .co { color: var(--muted); font-size: 14px; font-weight: 500; }
-.case-main h3 { font-size: clamp(22px, 2.6vw, 30px); line-height: 1.3; margin: 0; }
-.case-meta { font-size: 14px; color: var(--muted); margin: 8px 0 28px; font-variant-numeric: tabular-nums; }
-.case dl { margin: 0; display: grid; gap: 20px; }
-.case dt { font-size: 13px; font-weight: 700; color: var(--fg); }
-.case dd { margin: 6px 0 0; }
-.case dd ul { margin: 0; padding-left: 1.1em; color: var(--muted); font-size: 15px; display: grid; gap: 4px; }
+.case-main h3 { font-size: clamp(24px, 2.8vw, 32px); line-height: 1.25; margin: 0; }
+.case-sub { margin: 6px 0 0; font-size: 17px; font-weight: 700; color: var(--accent-text); line-height: 1.45; }
+.case-meta { font-size: 14px; color: var(--muted); margin: 6px 0 0; font-variant-numeric: tabular-nums; }
+.case-focus { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 24px; color: var(--muted); }
+/* Case card shows the challenge and my role up front; background, strategy and execution fold away */
+.case-lead { margin: 0 0 18px; font-size: 16.5px; font-weight: 600; line-height: 1.6; }
+.case-lead b { display: block; margin-bottom: 4px; font-size: 13px; font-weight: 800; color: var(--accent-text); letter-spacing: .02em; }
+.case-more { margin-top: 18px; }
+.case-more summary { cursor: pointer; width: fit-content; font-size: 14px; font-weight: 700; color: var(--accent-text); }
+.case-more summary span { margin-left: 8px; font-weight: 500; color: var(--muted); }
+.case-more[open] summary { margin-bottom: 18px; }
+.case dl { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 28px; }
+.case dl .full { grid-column: 1 / -1; }
+.case dl .role { background: var(--bg); border-left: 3px solid var(--blue); border-radius: 4px 14px 14px 4px; padding: 16px 18px; }
+.case dt, .ai-card dt { font-size: 13px; font-weight: 800; color: var(--fg); letter-spacing: .02em; }
+.case dt span, .ai-card dt span { color: var(--muted); font-weight: 600; margin-left: 6px; }
+.case dd, .ai-card dd { margin: 6px 0 0; }
+.case dd ul, .ai-card dd ul { margin: 0; padding-left: 1.1em; color: var(--muted); font-size: 15px; display: grid; gap: 4px; }
 .case-result {
-  border-radius: calc(var(--radius-lg) - 8px); padding: 32px 28px;
-  display: flex; flex-direction: column; gap: 22px; min-width: 0; color: var(--white);
+  border-radius: calc(var(--radius-lg) - 8px); padding: 28px 32px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 20px 44px; min-width: 0; color: var(--white);
 }
 .case:nth-child(3n+1) .case-result { background: var(--black); }
 .case:nth-child(3n+2) .case-result { background: var(--blue); }
 .case:nth-child(3n+3) .case-result { background: var(--navy); }
-.case-result > .pill { align-self: flex-start; }
+.case-result > .pill { align-self: center; }
 .kr-metric .stat-val { font-size: clamp(36px, 3.8vw, 48px); line-height: 1; font-variant-numeric: tabular-nums; }
 .kr-metric .stat-val small { font-size: .5em; margin-left: 2px; }
 .kr-metric .stat-label { margin-top: 8px; font-size: 15px; font-weight: 700; }
 .kr-cap { margin: 4px 0 0; font-size: 13px; color: rgba(255, 255, 255, .72); line-height: 1.55; }
 .kr-notes {
-  margin: 0; padding: 18px 0 0; list-style: none; border-top: 1px solid rgba(255, 255, 255, .22);
-  display: grid; gap: 10px; font-size: 14px; color: rgba(255, 255, 255, .8);
+  margin: 0; padding: 0 0 0 32px; list-style: none; border-left: 1px solid rgba(255, 255, 255, .22);
+  flex: 1 1 240px; display: grid; gap: 8px; font-size: 14.5px; color: rgba(255, 255, 255, .85);
 }
+.kr-outputs { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; flex: 1 1 auto; }
+.kr-outputs li { flex: 1 1 220px; }
+.kr-outputs li {
+  background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 14px; padding: 14px 16px; font-size: 16px; font-weight: 700; line-height: 1.4;
+}
+.kr-outputs li small { display: block; margin-top: 4px; font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, .75); line-height: 1.55; }
 
 /* Archive */
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
@@ -245,6 +302,15 @@ section { padding-block: 96px 0; }
 .chip[aria-pressed="true"] { background: var(--blue); color: var(--white); border-color: var(--blue); }
 .archive { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .proj { background: var(--surface-soft); border-radius: var(--radius); padding: 28px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.proj:focus { outline: none; }
+.proj--new { box-shadow: inset 0 0 0 2px var(--blue); }
+/* Archive card with a poster: full row, poster left, text right */
+.proj--wide { grid-column: 1 / -1; display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 32px; align-items: start; }
+.proj-body { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.proj-body .case-link { align-self: flex-start; background: var(--bg); }
+.proj-poster { margin: 0; }
+.proj-poster img { display: block; width: 100%; height: auto; border-radius: 12px; background: var(--grey); }
+.proj-poster figcaption { margin-top: 8px; font-size: 12px; color: var(--muted); }
 .proj-meta { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 .proj-meta b { color: var(--accent-text); font-weight: 700; }
 .proj h4 { margin: 0; font-size: 19px; line-height: 1.4; }
@@ -254,15 +320,54 @@ section { padding-block: 96px 0; }
 .proj summary { cursor: pointer; color: var(--accent-text); font-size: 14px; font-weight: 600; width: fit-content; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px; color: var(--muted); }
 .empty { color: var(--muted); }
+.more-wrap { display: flex; justify-content: center; margin-top: 24px; }
+.btn-ghost {
+  font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; color: var(--fg);
+  background: transparent; border: 1.5px solid var(--line); border-radius: 999px; padding: 10px 26px;
+}
+.btn-ghost:hover { border-color: var(--fg); }
+
+/* AI & Innovation */
+.ai-track {
+  background: var(--navy); color: var(--white); border-radius: var(--radius-lg); padding: 36px;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: 32px; align-items: start; margin-bottom: 16px;
+}
+.ai-track .pill { color: var(--on-dark-muted); }
+.ai-track h3 { margin: 14px 0 0; font-size: clamp(22px, 2.6vw, 28px); line-height: 1.3; }
+.ai-track p { margin: 0; color: var(--on-dark-muted); }
+.ai-track .ai-assign { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, .18); font-size: 14.5px; }
+.ai-track .ai-assign b { color: var(--white); font-weight: 700; }
+.ai-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.ai-card { background: var(--surface-soft); border-radius: var(--radius-lg); padding: 32px 28px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.ai-card .case-top { margin-bottom: 0; }
+/* Tool screenshot: top of the screen (summary cards and chart), cropped to a fixed frame */
+.ai-shot {
+  position: relative; margin: -12px -8px 6px; aspect-ratio: 16 / 10; overflow: hidden;
+  border-radius: 14px; border: 1px solid var(--line); background: #ffffff;
+}
+.ai-shot a { display: block; height: 100%; }
+.ai-shot figcaption { pointer-events: none; }
+.ai-shot img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; display: block; }
+.ai-shot figcaption {
+  position: absolute; right: 10px; bottom: 10px; font-size: 11px; color: var(--white);
+  background: rgba(0, 14, 43, .6); padding: 2px 8px; border-radius: 999px;
+}
+.ai-card h3 { margin: 0; font-size: clamp(20px, 2.2vw, 24px); line-height: 1.35; }
+.ai-card .case-focus { margin: 0; }
+.ai-card dl { margin: 4px 0 0; display: grid; gap: 16px; }
+.ai-note { margin: auto 0 0; padding-top: 14px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
 
 /* Timeline */
-.timeline { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
 .tl { border-top: 3px solid var(--line); padding-top: 20px; min-width: 0; }
 .tl:last-child { border-top-color: var(--blue); }
-.tl-year { color: var(--accent-text); font-size: 40px; line-height: 1; font-variant-numeric: tabular-nums; }
-.tl h4 { margin: 18px 0 0; font-size: 20px; }
-.tl-role { margin: 4px 0 0; font-size: 15px; font-weight: 600; }
-.tl-period { margin: 2px 0 12px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tl-year { color: var(--accent-text); font-size: 38px; line-height: 1; font-variant-numeric: tabular-nums; }
+.tl-kind { margin-top: 14px; color: var(--accent-text); }
+.tl h4 { margin: 14px 0 0; font-size: 20px; }
+.tl-kind + h4 { margin-top: 8px; }
+.tl-role { margin: 4px 0 0; font-size: 15px; font-weight: 600; line-height: 1.5; }
+.tl-note { margin: 4px 0 0; font-size: 13px; color: var(--muted); line-height: 1.5; }
+.tl-period { margin: 4px 0 12px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .tl-sum { margin: 0; font-size: 14.5px; color: var(--muted); }
 .side-info { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 48px; }
 .side-info > div { background: var(--surface-soft); border-radius: var(--radius); padding: 24px 28px; display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
@@ -306,21 +411,33 @@ footer { padding-block: 40px; font-size: 13px; color: var(--muted); }
 @media (max-width: 960px) {
   .comp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .case { grid-template-columns: minmax(0, 1fr); }
-  .timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 40px; }
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ai-track, .ai-grid { grid-template-columns: minmax(0, 1fr); }
+  .timeline { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 40px; }
 }
 @media (max-width: 640px) {
   section { padding-block: 72px 0; }
   .hero-text { padding: 40px 24px; gap: 24px; }
   .br-desk { display: none; }
-  .hero-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-  .hero-stat b { font-size: 34px; }
-  .hero-stat small { letter-spacing: .06em; font-size: 11px; }
+  .hero-stats { gap: 40px; }
+  .hero-stat b { font-size: 38px; }
+  .hero-stat small { letter-spacing: .08em; font-size: 11px; }
   .toc-card { padding: 16px 24px; }
-  .toc, .about, .archive, .side-info, .comp-grid, .timeline { grid-template-columns: minmax(0, 1fr); }
+  .toc li:nth-last-child(2) a { border-bottom: 1px solid var(--line); }
+  .toc, .about, .archive, .side-info, .comp-grid, .timeline, .steps, .case dl { grid-template-columns: minmax(0, 1fr); }
   .about { gap: 24px; }
-  .value { padding: 48px 24px; }
-  .case-main { padding: 24px 18px; }
-  .case-result { padding: 24px 20px; }
+  .value { padding: 48px 20px; }
+  .case-main { padding: 24px 18px 16px; }
+  .case-result { padding: 24px 20px; flex-direction: column; align-items: stretch; gap: 20px; }
+  .case-result > .pill { align-self: flex-start; }
+  .kr-notes { padding: 18px 0 0; border-left: 0; border-top: 1px solid rgba(255, 255, 255, .22); flex-basis: auto; }
+  .kr-outputs { flex-direction: column; }
+  .kr-outputs li { flex-basis: auto; }
+  .ai-track { padding: 28px 22px; gap: 20px; }
+  .ai-card { padding: 24px 20px; }
+  .proj { padding: 24px 20px; }
+  .proj--wide { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .proj-poster img { width: 160px; }
   .contact { grid-template-columns: minmax(0, 1fr); padding: 40px 24px; gap: 28px; }
 }
 </style>
@@ -337,18 +454,12 @@ footer { padding-block: 40px; font-size: 13px; color: var(--muted); }
   <div class="wrap hero">
     <div class="hero-card">
       <div class="hero-text">
-        <p class="hero-tagline">전략 수립부터 예산 운영, 성과 관리까지<br>마케팅 조직을 이끌어 왔습니다</p>
-        <div>
-          <p class="hero-label">마케팅 리더 한다래</p>
-          <h1 class="hero-name" aria-label="HAN DA RAE"><span>HAN</span><span>DA</span><span>RAE</span></h1>
-        </div>
-        <p class="hero-role">Head of Global Marketing · NCSOFT<br>Marketing Team Lead · WEMADE</p>
-        <p class="hero-intro">Brand&nbsp;· Performance&nbsp;· <span class="nowrap">Business Development</span><br>개발·사업 조직과 함께 제품의 포지셔닝을 정의하고,<br class="br-desk"> 브랜드 캠페인과 퍼포먼스 집행으로 연결해<br class="br-desk"> <em>정량 성과를 만들어 온</em> 마케팅 리더입니다.</p>
+        <p class="hero-tagline">시장과 고객을 읽고,<br>브랜드와 실행 전략으로 연결합니다</p>
+        <h1 class="hero-name" aria-label="한다래 HAN DA RAE"><span>HAN</span><span>DA</span><span>RAE</span></h1>
+        <p class="hero-role"><span class="nowrap">Brand Strategy&nbsp;·</span> <span class="nowrap">Integrated Marketing&nbsp;·</span> <span class="nowrap">Creative Planning</span></p>
+        <p class="hero-intro">게임, 콘텐츠, 플랫폼 분야에서 제품의 경쟁력을 정의하고,<br class="br-desk"> 브랜드 메시지와 크리에이티브, 실행 계획으로 구체화해<br class="br-desk"> <em>신규 서비스의 출시와 성장</em>을 이끌어 왔습니다.</p>
         <div class="hero-stats">
-          <div class="hero-stat"><b>20</b><small>YEARS EXP.</small></div>
-          <div class="hero-stat"><b>18</b><small>PEOPLE LED</small></div>
-          <div class="hero-stat"><b>35</b><small>MARKETS</small></div>
-        </div>
+          <div class="hero-stat"><b>19</b><small>YEARS IN MARKETING</small></div>        </div>
       </div>
     </div>
   </div>
@@ -370,8 +481,9 @@ footer { padding-block: 40px; font-size: 13px; color: var(--muted); }
   <section id="value"><div class="wrap">
     <div class="value">
       <span class="pill">How I work</span>
-      <blockquote>핵심 메시지 하나를 정하고,<br><span>성과는 숫자로</span> 증명합니다.</blockquote>
-      <p>개발·사업 조직과 함께 제품의 포지셔닝을 정의하고, 브랜드 캠페인과 퍼포먼스 집행을 하나의 퍼널로 연결해 사전예약, 모객 효율, 활성 유저로 검증해 왔습니다.</p>
+      <blockquote>풀어야 할 문제를 먼저 정하고,<br><span>결과로 판단을 검증합니다.</span></blockquote>
+      <p>좋은 캠페인은 정확한 문제 정의에서 시작한다고 믿습니다.<br class="br-desk"> 누구에게 무엇을 전달해야 하는지 정한 뒤 메시지와 채널, 예산의 기준을 세우고,<br class="br-desk"> 실행 후에는 미리 정한 지표로 판단이 맞았는지 확인합니다.</p>
+      <ol class="steps" id="steps"></ol>
     </div>
   </div></section>
 
@@ -391,6 +503,15 @@ footer { padding-block: 40px; font-size: 13px; color: var(--muted); }
     <div class="sec-head"><span class="pill">Archive</span><h2 class="sec-title">프로젝트 아카이브</h2></div>
     <div class="chips" id="chips" role="group" aria-label="분야별 보기"></div>
     <div class="archive" id="archive-list" aria-live="polite"></div>
+    <div class="more-wrap" id="more-wrap"></div>
+    <span class="sec-end" aria-hidden="true"></span>
+  </div></section>
+
+  <section id="ai"><div class="wrap">
+    <div class="sec-head"><span class="pill">AI &amp; Innovation</span><h2 class="sec-title">AI로 넓히는 일하는 방식</h2></div>
+    <p class="sec-lead">마케팅 실무에서 생긴 문제를 직접 정의하고, 필요한 기능을 기획해 AI로 구현한 뒤 실제 업무에 쓰고 있습니다. 개발자로의 전환이 아니라, 기존 전문성을 더 빠르고 정확하게 쓰기 위한 확장입니다.</p>
+    <div class="ai-track" id="ai-track"></div>
+    <div class="ai-grid" id="ai-list"></div>
     <span class="sec-end" aria-hidden="true"></span>
   </div></section>
 
@@ -406,7 +527,7 @@ footer { padding-block: 40px; font-size: 13px; color: var(--muted); }
       <div class="contact-intro">
         <span class="pill">Contact</span>
         <h2>함께 만들 다음 프로젝트를<br>기다립니다</h2>
-        <p>글로벌 퍼블리싱, 신작 론칭, 마케팅 조직 리딩에 관한 제안은 이메일로 보내 주세요.</p>
+        <p>마케팅 전략, 브랜드 개발, 신규 서비스 출시, 마케팅 조직과 프로젝트 리딩에 관한 제안은 이메일로 보내 주세요.</p>
       </div>
       <div class="contact-box">
         <small>EMAIL</small>
@@ -421,310 +542,553 @@ footer { padding-block: 40px; font-size: 13px; color: var(--muted); }
 <footer><div class="wrap">© HAN DA RAE · 공개용 포트폴리오로, 회사 내부 수치는 비율과 규모 단위로만 표기했습니다.</div></footer>
 
 <script>
-/* 공개용 수위: career-data.json의 public 항목을 기준으로, 내부 예산·목표치·정확한 유저 수·계약 조건·
-   미발표 프로젝트·제품에 대한 내부 평가는 비율과 규모 단위로 바꾸거나 뺐음. 상세 수치는 제출용 데이터에만 둠 */
+/* v2.0 (2026.11) 기준 데이터: Career_ROOT_v1.0과 대조.
+   공개용 수위: 내부 예산·목표치·정확한 이용자 수·계약 조건·미공개 프로젝트는 비율과 규모 단위로 바꾸거나 뺐음.
+   프로젝트 구조: background(배경) · challenge(과제) · role(내 역할) · strategy(전략) · execution(실행) · results/outputs(결과).
+   대표 프로젝트는 featuredOrder의 id로 지정하고, 나머지는 아카이브에 자동으로 들어감(중복 노출 없음) */
 const D = {
   profile: {
     name: "한다래",
+    headline: "시장과 고객을 읽고<br><em>브랜드와 실행 전략</em>으로<br>연결하는 마케터",
     summary: [
-      "게임 산업 20년 경력의 마케팅 리더입니다. 엔씨소프트 글로벌마케팅실장으로서 브랜드마케팅·퍼포먼스마케팅·마케팅사업개발 3개 팀(18명)을 총괄했으며, L2M 글로벌 출시와 자사 플랫폼 퍼플 론칭 등 대형 프로젝트의 전략 수립, 예산 운영, 성과 관리를 책임졌습니다.",
-      "개발·사업 조직과 함께 제품의 핵심 메시지와 포지셔닝을 정의하고, 이를 브랜드 캠페인과 퍼포먼스 집행으로 연결해 사전예약, 모객 효율, 활성 유저 등 정량 지표로 성과를 검증해 왔습니다."
+      "게임, 콘텐츠, 플랫폼 분야에서 19년간 마케팅을 해 왔습니다. 신규 서비스 출시와 브랜드 개발, 국내외 통합 마케팅, 고객획득 전략을 맡았고, 엔씨소프트에서는 글로벌마케팅실을 이끌며 마케팅 전략과 조직 운영, 예산과 성과 관리를 책임졌습니다.",
+      "제가 가장 잘하는 일은 시장과 고객을 이해해 제품의 경쟁력을 정의하고, 그것을 브랜드 메시지와 크리에이티브, 실행 계획으로 구체화하는 것입니다. 새 플랫폼의 이름을 짓고 포지셔닝을 정하는 일부터 권역별 고객획득 전략을 세우고 투자 효율을 확인하는 일까지 같은 원칙으로 일해 왔습니다.",
+      "최근에는 서울연극창작센터 행사의 홍보와 영상 기획을 맡아 문화예술 분야로 경험을 넓혔고, 업무에 필요한 도구를 AI로 직접 만들어 쓰며 일하는 방식도 확장하고 있습니다."
     ],
     email: "no0115@naver.com"
   },
+  steps: [
+    { k: "01", title: "문제 정의", text: "사업 목표와 고객을 보고, 이번에 풀어야 할 과제를 한 문장으로 정합니다." },
+    { k: "02", title: "전략 설계", text: "포지셔닝과 핵심 메시지, 채널과 예산의 기준을 함께 세웁니다." },
+    { k: "03", title: "실행", text: "개발과 사업 조직, 대행사, 해외 법인과 역할을 나눠 끝까지 운영합니다." },
+    { k: "04", title: "성과 검증", text: "미리 정한 지표로 결과를 확인하고, 기준이 흔들리면 기준부터 바로잡습니다." }
+  ],
+  /* 아카이브 필터: 과도하게 쪼개지 않도록 7개 분류만 사용 */
   tags: {
-    brand: "브랜드·포지셔닝", performance: "퍼포먼스·UA", crm: "리텐션·재활성화",
-    global: "글로벌 출시", launch: "신작 론칭", live: "라이브 서비스", platform: "플랫폼·D2C",
-    ip: "IP·프랜차이즈", data: "데이터·성과측정", leadership: "조직·예산 리더십",
-    btl: "BTL·오프라인", partnership: "제휴", risk: "커뮤니케이션 리스크"
+    brand: "브랜드·크리에이티브", launch: "출시 전략", ua: "고객획득·성과 관리",
+    global: "글로벌·IP", btl: "제휴·BTL", org: "조직·프로젝트 관리", culture: "문화예술"
   },
   experience: [
     {
-      company: "위메이드", dept: "퍼블리싱본부 마케팅팀", role: "마케팅팀장 (부장)",
-      start: "2025-11", end: "2026-01",
-      summary: "글로벌 퍼블리싱 마케팅 운영 체계 설계와 2026년 타이틀별 마케팅 전략 수립",
+      company: "프리랜서", kind: "Freelance", dept: "서울연극창작센터 〈장면출고〉", role: "통합 홍보·영상 기획",
+      start: "2026-08", end: "2026-10",
+      summary: "문화예술 행사의 홍보 전략과 핵심 메시지, 영상 콘텐츠 기획, 관객 예매 운영",
       projects: [
         {
-          id: "wm-ymir", title: "레전드 오브 이미르 글로벌 2차 출시 마케팅",
-          start: "2025-11", end: "2025-12", tags: ["global", "performance", "data"],
-          scope: ["동아시아 중심 글로벌 2차 출시 마케팅, 국가별 로드맵과 액션 플랜 수립"],
-          approach: ["국가·매체·타깃별 유입 데이터를 분석해 UA 집행 구조와 매체 비중 재조정"],
-          results: [{ text: "UA 개선안 적용 후 국가별 신규 유입(NRU) 1.2배" }]
-        },
-        {
-          id: "wm-org", title: "글로벌 퍼블리싱 마케팅 운영 체계 설계",
-          start: "2025-11", end: "2025-12", tags: ["leadership"],
-          scope: ["퍼블리싱 마케팅 조직의 역할 체계와 운영 프로세스 설계"],
-          results: [{ text: "2026년 퍼블리싱 타이틀별 마케팅 전략 및 연간 계획 수립" }]
+          id: "fl-scene", isNew: true, title: "서울연극창작센터 〈장면출고〉 통합 홍보·영상 기획",
+          start: "2026-08", end: "2026-10", tags: ["culture", "brand"],
+          media: { src: "images/scene-poster.png", alt: "공간개방축제 장면출고 SCENES UNLOCKED 포스터, 2026.10.2~10.24", credit: "© 서울연극창작센터",
+            video: { url: "https://www.youtube.com/watch?v=FXscg8-pmkg", label: "SCENES OF THE WEEK 2주차 영상" } },
+          background: ["서울특별시와 서울문화재단이 주최·주관한 서울연극창작센터 공간개방축제. 연극 창작 과정을 시민과 나누는 센터의 정체성을 알리는 행사"],
+          role: ["프리랜서로 통합 홍보와 영상 기획 담당"],
+          strategy: [
+            "일반 시민과 연극 관계자를 나눠 각각에 맞는 커뮤니케이션 방향 수립",
+            "핵심 메시지 ‘연극, 앞으로 한 발 더’를 중심으로 행사 로고와 후속 콘텐츠의 시각적·언어적 방향 설정"
+          ],
+          execution: [
+            "영상 콘텐츠 SCENES OF THE WEEK 기획 및 디자인 방향 수립",
+            "네이버 스마트플레이스 예약 페이지와 공연 티켓 시스템 등록, 개막 공연 그룹별 예매와 티켓 운영",
+            "공연별·회차별 예매 현황 대시보드를 만들어 주관사에 제공 (AI & Innovation 참고)"
+          ],
+          results: [
+            { text: "행사 핵심 메시지와 콘텐츠 방향 구체화" },
+            { text: "영상 콘텐츠 SCENES OF THE WEEK 기획" },
+            { text: "관객 예매 경로와 예매 현황 공유 체계 구축" }
+          ]
         }
       ]
     },
     {
-      company: "엔씨소프트", dept: "글로벌본부 글로벌마케팅실", role: "글로벌마케팅실 실장",
-      start: "2017-04", end: "2025-10",
-      summary: "브랜드마케팅·퍼포먼스마케팅·마케팅사업개발 3개 팀 18명을 이끌며 신작 론칭, 자사 플랫폼, 글로벌 IP 마케팅을 총괄",
+      company: "위메이드", dept: "퍼블리싱본부", role: "마케팅팀장 (부장)",
+      start: "2025-11", end: "2025-12",
+      summary: "글로벌 퍼블리싱 마케팅 조직 진단과 운영 체계 설계, 타이틀별 연간 마케팅 계획 수립",
       projects: [
         {
-          id: "nc-l2m", title: "L2M 북미·유럽·러시아 출시 마케팅",
-          image: { src: "images/l2m-launch.jpg", alt: "Lineage2M 북미·유럽 그랜드 런칭 키 아트", credit: "© NCSOFT", pos: "50% 50%" },
-          start: "2021-05", end: "2022-02", tags: ["global", "launch", "performance", "leadership"],
-          scope: ["L2M 북미, 유럽, 러시아 출시 마케팅 총괄", "2차 출시 시장 리서치 및 타깃 전략 수립", "권역별 마케팅 전략, 크리에이티브 기획·제작, 현지 매체 전략 수립 및 집행"],
-          context: ["1티어 시장 성공 이후 권역 확장으로 PLC 연장", "리니지 계열 타이틀의 글로벌 출시 기준 데이터와 타깃 모델 구축, 퍼플 시장 확장 병행"],
-          approach: [
-            "국가별 K-MMORPG 이용자 규모와 모객 단가를 비교해 효율 중심으로 마케팅 믹스 구성",
-            "권역별 현지 매체 효과 검증 (북미: 인플루언서, 웹진, 스냅챗 / 러시아: 얀덱스, 현지 PR 매체)",
-            "북미 지사와 협업해 현지 프레스 네트워크 활용, 현지 정서에 맞춘 크리에이티브 개선"
+          id: "wm-ymir", title: "레전드 오브 이미르: 유입 문제 정의와 개선 방향 수립",
+          start: "2025-11", end: "2025-12", tags: ["global", "ua"],
+          challenge: ["동아시아 중심 글로벌 2차 출시 이후 초기 유입 이용자의 이탈"],
+          strategy: [
+            "이탈 원인을 콘텐츠 소구력, 타깃 이용자층과 경쟁작 간 이용자 잠식, 광고 전환 효율의 세 가지 관점에서 가설로 정리",
+            "국가별·매체별·타깃별 유입 데이터 분석 결과를 검토해 개선 방향 수립"
           ],
-          results: [
-            { text: "사전예약 목표 초과 달성", metric: { value: "116", unit: "%", label: "사전예약 목표 대비 달성률" } },
-            { text: "북미·유럽·러시아 3개 권역 동시 출시", metric: { value: "3", unit: "개 권역", label: "동시 출시 시장" } },
-            { text: "마케팅 모객 ROAS 100% 이상 달성" }
-          ]
+          execution: [
+            "국가별 마케팅 로드맵과 모객 시뮬레이션에 따른 실행계획 수립",
+            "국가별 콘텐츠 업데이트 우선순위, 타깃 확장, 광고 소재와 예산 비중 조정 방향 제시"
+          ],
+          results: [{ text: "개선 전 대비 신규 이용자(NRU) 유입 20% 증가" }]
         },
         {
-          id: "nc-purple", title: "퍼플: 업계 최초 자체 크로스플레이 플랫폼 출시 마케팅",
+          id: "wm-org", title: "글로벌 퍼블리싱 마케팅 조직 운영 체계 설계",
+          start: "2025-11", end: "2025-12", tags: ["org"],
+          background: ["글로벌 퍼블리싱 마케팅 조직의 진단과 운영 개선"],
+          strategy: ["글로벌 퍼블리싱 선도사의 조직 구조와 개발사·파트너사 협업 방식 벤치마킹"],
+          results: [
+            { text: "조직 구성안과 역할 정의, 운영 프로세스 설계" },
+            { text: "라이브 타이틀별 목표 매출과 업데이트 계획에 맞춘 연간 마케팅 로드맵, 목표 트래픽, 예산 계획 수립" }
+          ]
+        }
+      ]
+    },
+    {
+      company: "엔씨소프트", dept: "글로벌마케팅실", role: "글로벌마케팅실장 (2020~2025.06)",
+      start: "2017-04", end: "2025-10",
+      summary: "국내외 신규 게임과 플랫폼의 마케팅 전략 수립과 프로젝트 총괄, 조직 운영과 예산·성과 관리",
+      projects: [
+        {
+          id: "nc-purple", title: "퍼플", subtitle: "신규 플랫폼 브랜드 개발 및 출시",
+          focus: ["신규 브랜드 개발", "네이밍", "포지셔닝", "서비스 출시"],
           image: { src: "images/purple-banner.jpg", alt: "퍼플 광고 배너: 리니지2M을 색다르게, 그 시작은 퍼플", credit: "© NCSOFT", fit: "contain",
             video: { url: "https://www.youtube.com/watch?v=tZQNtj5uYQ0", label: "광고영상 보기" } },
-          start: "2019-11", end: "2021-04", tags: ["platform", "brand", "launch", "performance"],
-          scope: ["크로스플레이 플랫폼 퍼플 출시 마케팅 총괄", "출시 전 브랜드 전략 수립 및 네이밍 개발", "론칭 마케팅 집행, 출시 후 라이브 입점 마케팅 4건 진행"],
-          context: ["모바일 게임 입점 채널이 외부 스토어에 편중된 구조에서, 자사 유저 풀을 장기적으로 확보하기 위한 자체 플랫폼 출시"],
-          approach: [
-            "처음 선보이는 서비스여서 특장점을 빠르게 이해시키는 것을 핵심 과제로 설정",
-            "대형 타이틀 L2M 출시 시점에 맞춰 L2M 유저의 퍼플 전환에 집중",
-            "\"리니지2M을 PC에서\" 단일 메시지로 [퍼플 = 리니지2M의 PC 플랫폼] 포지셔닝 확립"
+          start: "2019-11", end: "2021-04", tags: ["brand", "launch", "ua"],
+          background: ["모바일 게임 유통이 외부 스토어에 집중된 구조에서, 의존도를 낮추고 자사 이용자 기반을 확보하기 위해 크로스플레이 플랫폼을 출시"],
+          challenge: ["처음 선보이는 서비스여서, 이용자가 무엇을 할 수 있는지 빠르게 이해하도록 기능적 가치를 전달해야 했음"],
+          role: ["신규 플랫폼 출시 마케팅 총괄", "브랜드 전략과 네이밍 개발, 출시 캠페인과 입점 타이틀 마케팅의 기획 및 의사결정"],
+          strategy: [
+            "플랫폼을 설명하는 대신 ‘리니지2M을 PC에서’라는 메시지 하나로 기능적 포지셔닝을 정함",
+            "리니지2M 출시와 입점을 연계해, 이미 게임을 즐기는 이용자를 첫 고객으로 확보"
+          ],
+          execution: ["출시 전후 단계별 캠페인 운영", "출시 후 입점 타이틀 4종의 마케팅 기획과 추진"],
+          results: [
+            { text: "", metric: { value: "56.5", unit: "%", label: "캠페인 다운로드 중 광고 기여" } },
+            { text: "", metric: { value: "49.5", unit: "%", label: "라이브 이용자 중 광고 유입" } },
+            { text: "리니지2M 이용자의 퍼플 전환 목표 초과 달성" },
+            { text: "브랜드명 ‘퍼플’ 네이밍과 플랫폼 출시" }
+          ]
+        },
+        {
+          id: "nc-l2m", title: "리니지2M", subtitle: "북미·유럽·러시아 글로벌 출시",
+          focus: ["글로벌 시장 진입", "통합 마케팅", "고객획득 전략"],
+          image: { src: "images/l2m-launch.jpg", alt: "Lineage2M 북미·유럽 그랜드 런칭 키 아트", credit: "© NCSOFT", pos: "50% 50%" },
+          start: "2021-05", end: "2022-02", tags: ["global", "launch", "ua"],
+          background: ["북미, 유럽, 러시아라는 신규 권역으로 서비스를 넓혀 게임의 수명을 확장하는 글로벌 출시"],
+          challenge: ["국가마다 이용자 규모와 예상 모객 단가가 크게 달라, 한정된 예산을 어느 시장에 얼마나 쓸지 정해야 했음"],
+          role: ["북미·유럽·러시아 출시 마케팅 총괄", "권역별 타깃과 미디어 믹스, 국가별 예산 배분, 크리에이티브 현지화 방향 결정"],
+          strategy: [
+            "권역별 목표 고객 규모와 예상 모객 단가를 비교해 효율 중심으로 미디어 믹스와 예산 구성",
+            "현지 인플루언서, 게임 전문 매체, 현지 PR을 조합하고 채널별 효과를 검토"
+          ],
+          execution: [
+            "북미 법인과 함께 현지 미디어와 크리에이티브 협업",
+            "고객획득과 매출 성과에 따라 투자 효율을 관리하고 예산 조정"
           ],
           results: [
-            { text: "캠페인 기간 다운로드의 과반이 광고 유입", metric: { value: "56.5", unit: "%", label: "다운로드 중 광고 기여" } },
-            { text: "라이브 기간 이용자의 약 절반이 광고 캠페인으로 유입", metric: { value: "49.5", unit: "%", label: "라이브 이용자 광고 유입" } },
-            { text: "L2M 이용자 전환 목표 초과 달성" }
+            { text: "", metric: { value: "116", unit: "%", label: "사전예약 목표 대비 달성률" } },
+            { text: "", metric: { value: "35", unit: "%", label: "예상 대비 마케팅 예산 절감" } },
+            { text: "마케팅 유입 이용자 ROAS 100% 이상" }
           ]
         },
         {
-          id: "nc-gw2", title: "GW2 라이브 마케팅 성과 관리",
-          image: { src: "images/gw2-eod.jpg", alt: "Guild Wars 2: End of Dragons 런칭 키 아트", credit: "© ArenaNet · NCSOFT", pos: "50% 22%" },
-          start: "2022-03", end: "2022-11", tags: ["live", "global", "data"],
-          scope: ["GW2 확장팩 End of Dragons 캠페인 성과 관리", "GW2 10주년 캠페인과 스팀 입점 계획 검토", "북미 캠페인 성과 측정 기준 정비"],
-          context: ["북미 지사·개발사 사업관리 업무가 소속 본부로 이관되며, 진행 중인 캠페인의 성과 관리를 담당"],
-          approach: ["효율 측정 지표 기준을 재수립해 캠페인 성과를 정량적으로 관리하는 체계 확보"],
+          id: "nc-bns2", title: "블레이드앤소울2", subtitle: "브랜드 및 영상 콘텐츠 기획",
+          focus: ["IP 커뮤니케이션", "크리에이티브", "영상 콘텐츠", "쇼케이스"],
+          image: { src: "images/bns2-reveal.jpg", alt: "블레이드앤소울2 공개 영상의 로고 장면", credit: "© NCSOFT", pos: "50% 50%",
+            video: { url: "https://www.youtube.com/watch?v=qzC8Gi4fIUc", label: "최초 공개 트레일러 · 시간을 걷는 자" },
+            more: [{ url: "https://www.youtube.com/watch?v=-uVG8ojMhOY", label: "신화의 시작 II – 파사편" }] },
+          start: "2018-04", end: "2019-11", tags: ["brand", "launch", "global"],
+          background: ["블레이드앤소울 IP의 정규 후속작을 처음 세상에 공개하는 단계"],
+          challenge: ["기존 팬덤에게 ‘왜 정식 후속작인가’를 납득시키고, 원작과 다른 점을 분명히 전달해야 했음"],
+          role: [
+            "출시 TFT 마케팅 담당으로 최초 공개 쇼케이스, 트레일러, BI, 웹페이지 기획",
+            "최초 공개 트레일러의 기획과 제작 방향 수립"
+          ],
+          strategy: [
+            "정규 후속작으로서의 정체성과 차별성을 사전 커뮤니케이션의 핵심 메시지로 설정",
+            "공개 직후 트레일러 해석 콘텐츠로 팬덤의 관심이 바이럴과 검색으로 이어지도록 설계"
+          ],
+          execution: [
+            "최초 공개 쇼케이스와 트레일러, BI, 웹페이지 기획",
+            "트레일러 해석 콘텐츠, 바이럴, SEO 연계 확산 기획",
+            "Google과 함께 영상 시청에서 게임 설치로 이어지는 사전예약 모델 개발"
+          ],
           results: [
-            { text: "10주년·스팀 입점 캠페인에 개선 기준 적용", metric: { value: "15", unit: "%", label: "예상 대비 집행비 절감" } },
-            { text: "CPM, CPV 기준 미디어 효율 개선", metric: { value: "2", unit: "배", label: "CPM·CPV 효율" } }
+            { text: "", metric: { value: "20", unit: "만 회", label: "최초 공개 트레일러 조회수" } },
+            { text: "Google과 영상 시청에서 게임 설치로 이어지는 신규 사전예약 모델 개발" }
           ]
         },
         {
-          id: "nc-timetakers", title: "타임테이커즈 론칭 마케팅 전략 수립",
-          start: "2024-12", end: "2025-10", tags: ["launch", "global", "brand", "risk"],
-          scope: ["시장 분석과 제품 USP 분석을 바탕으로 마케팅 전략 및 로드맵 수립", "게임스컴 2025 출품으로 CBT 전 화제성 확보", "커뮤니케이션 방향 설정, 어셋 기획·제작, CBT 미디어·PR 계획 수립"],
-          approach: ["신규 IP의 단계별 커뮤니케이션 전략: 사전 공개와 비공개 테스트로 플레이 경험 중심의 여론 형성"],
+          id: "nc-gw2", title: "Guild Wars 2", subtitle: "글로벌 마케팅 성과 관리",
+          focus: ["성과 측정 체계", "투자 효율 관리", "해외 조직 협업"],
+          image: { src: "images/gw2-eod.jpg", alt: "Guild Wars 2: End of Dragons 런칭 키 아트", credit: "© ArenaNet · NCSOFT", pos: "50% 22%" },
+          start: "2022-03", end: "2022-11", tags: ["global", "ua"],
+          background: ["북미 지사의 마케팅 관리 업무가 소속 본부로 넘어오면서, 진행 중인 캠페인의 성과와 예산을 검토하게 됨"],
+          challenge: ["기존 성과 데이터에서 사전판매·총판매 집계 오류와 미디어 예산 불일치가 확인되어, 측정 기준부터 바로잡아야 했음"],
+          role: ["확장팩 End of Dragons 캠페인 결과와 10주년·Steam 입점 캠페인 계획 검토", "성과 측정 기준과 캠페인별 예산 적정성 검토, 개선 방향 결정"],
+          strategy: ["효율 측정 기준과 가이드를 다시 세워, 모든 캠페인을 같은 기준으로 비교할 수 있게 함"],
+          execution: ["북미 지사 성과 데이터의 신뢰도와 예산 집행 내역 점검", "정비한 기준을 10주년·Steam 입점 캠페인 계획에 적용"],
+          results: [
+            { text: "10주년·Steam 입점 캠페인 기준", metric: { value: "15", unit: "%", label: "예상 대비 비용 절감" } },
+            { text: "CPM·CPV 기준", metric: { value: "2", unit: "배", label: "미디어 효율 개선" } }
+          ]
+        },
+        {
+          id: "nc-timetakers", title: "타임테이커즈: 신규 IP 시장 분석과 커뮤니케이션 전략",
+          start: "2024-12", end: "2025-10", tags: ["launch", "global", "brand"],
+          challenge: ["성숙한 슈팅·배틀로얄 시장에서 신규 IP의 인지도와 게임 이해도가 낮다는 우려"],
+          strategy: [
+            "북미·유럽 시장 세분화와 핵심 타깃 정의",
+            "그래픽, 캐릭터성, 시간 요소 등 제품 특징을 바탕으로 USP와 포지셔닝 개발"
+          ],
+          execution: [
+            "출시 단계별 마케팅 로드맵과 커뮤니케이션 방향 수립, 마케팅 애셋 기획",
+            "게임스컴 2025 출품 준비와 CBT 목표 달성을 위한 미디어·PR 계획 수립"
+          ],
+          results: [{ text: "제품 경쟁 요소와 차별화 메시지 정의" }, { text: "출시 단계별 실행계획 수립" }]
+        },
+        {
+          id: "nc-gw-franchise", title: "글로벌 IP 프랜차이즈: IP·팬덤 중장기 전략",
+          start: "2022-10", end: "2024-11", tags: ["global", "brand"],
+          strategy: [
+            "프랜차이즈 시장 현황과 기존 팬덤을 분석해 IP 시장 포지셔닝과 단계별 공개 방향 도출",
+            "기존 팬덤과 신규 이용자를 잇는 로열티 프로그램과 커뮤니티 모델 기획"
+          ],
+          results: [
+            { text: "중장기 마케팅·PR 로드맵 수립" },
+            { text: "북미 개발 스튜디오와 국내 개발·사업 조직 간 협업 조율" }
+          ]
+        },
+        {
+          id: "nc-h2", title: "프로야구 H2: 크리에이티브와 통합 캠페인",
+          start: "2017-04", end: "2018-03", tags: ["brand", "ua"],
+          challenge: ["KBO 개막 시즌에 맞춰 브랜드를 다시 알리고 이용자를 활성화"],
+          strategy: ["레전드 선수 3인과 웹툰형 크리에이티브를 중심으로 방송, 영상, 바이럴, 검색을 잇는 통합 캠페인 설계"],
+          execution: [
+            "월별 콘텐츠 업데이트와 시즌 캠페인, 올스타전과 랭킹전 프로모션 기획·운영",
+            "프로야구, 모바일 야구 관련 검색과 콘텐츠 연계 노출 확대"
+          ],
+          results: [{ text: "KBO 개막 캠페인으로 DAU 약 2.2배 증가" }]
+        },
+        {
+          id: "nc-l2m-ua", title: "리니지2M 국내 출시: 고객획득 투자 기준 수립",
+          period: "국내 출시 캠페인", tags: ["ua", "launch"],
+          strategy: [
+            "자사 게임 평균 ARPU를 고려해 적정 모객 비용과 목표 ROAS 설정",
+            "광고 유입 이용자의 획득 비용과 3개월간 발생 매출을 비교하는 투자 효율 기준 적용"
+          ],
+          execution: ["성과에 따라 예산 배분과 개선 방향 결정"],
+          results: [
+            { text: "광고 유입 이용자의 3개월 매출 기준으로 투자 효율을 판단하는 체계 마련" },
+            { text: "출시 캠페인 전체 평균 ROAS를 목표 수준으로 유지" }
+          ]
+        },
+        {
+          id: "nc-lineagem", title: "리니지M: ASO·SEO 전략",
+          start: "2017-04", end: "2017-12", tags: ["launch", "ua"],
+          role: ["출시와 라이브 마케팅 기간 ASO·SEO 부문 담당"],
+          execution: [
+            "스토어 키워드 리서치, 메타데이터와 크리에이티브 최적화 방향 수립",
+            "공식 사이트, 뉴스룸, 커뮤니티 검색 노출 개선",
+            "스토어 성과 지표 관리와 테스트 결과 검토"
+          ],
+          results: [{ text: "출시 초기 앱스토어·구글플레이 인기와 매출 순위 1위 달성에 기여" }]
+        }
+      ]
+    },
+    {
+      company: "네오위즈게임즈", dept: "퍼블리싱마케팅팀", role: "퍼블리싱마케팅팀장",
+      start: "2012-01", end: "2017-03",
+      summary: "PC 퍼블리싱 게임의 브랜드·라이브 마케팅, 전사 BTL, 브랜드 제휴와 스폰서십, 사회공헌 브랜드 출시",
+      projects: [
+        {
+          id: "nw-greenpmang", title: "그린피망", subtitle: "사회공헌 브랜드 개발",
+          focus: ["브랜드 가치 전달", "사회공헌 커뮤니케이션", "이용자 참여 프로그램"],
+          image: { src: "images/greenpmang-logo.png", alt: "그린피망 로고: 네오위즈게임즈의 따뜻한 약속", credit: "© NEOWIZ", fit: "logo",
+            side: { src: "images/greenpmang-gstar2012.png", alt: "2012 제2회 지스타 투어 그린피망 게임원정대 모집 포스터" } },
+          start: "2013", end: "2013", tags: ["brand"],
+          background: ["회사의 사회공헌 활동을 하나의 브랜드로 묶어 이용자에게 선보이는 프로젝트"],
+          challenge: ["기부를 일회성 행사가 아니라, 게임을 즐기는 이용자가 직접 참여하는 프로그램으로 만들어야 했음"],
+          role: ["사회공헌 브랜드 출시와 브랜드 사이트 기획", "게임별 이용자 참여 프로그램 개발과 운영"],
+          strategy: ["게임 서비스와 기부를 연결해, 게임 속 참여가 곧 기부가 되는 구조로 설계"],
+          execution: ["지스타 원정대", "슬러거 사회적 약자 지원", "스페셜포스 사랑의 연탄", "A.V.A 모교 지원 프로모션"],
+          outputs: [
+            { title: "사회공헌 브랜드 ‘그린피망’ 출시", note: "브랜드 출시와 브랜드 사이트 기획" },
+            { title: "이용자 참여형 프로그램 4종", note: "게임 서비스와 기부를 연계해 개발·운영" }
+          ],
           results: []
         },
         {
-          id: "nc-gw-franchise", title: "글로벌 IP 프랜차이즈 중장기 마케팅 전략 수립",
-          start: "2022-10", end: "2024-11", tags: ["ip", "global", "brand"],
-          scope: ["글로벌 IP 프랜차이즈 현황 진단 및 시장 포지셔닝 방향 도출", "중장기 PR 로드맵과 커뮤니케이션 전략 수립"],
-          approach: ["기존 팬덤과 유저 풀의 연계를 목표로 PR, 로열티 프로그램, 팬덤 커뮤니티 모델 제안"],
-          results: [{ text: "북미 개발 스튜디오와 국내 개발·사업 조직 간 협업 조율" }]
+          id: "nw-blacksquad", title: "블랙스쿼드: ‘개념 FPS’ 브랜드 리뉴얼",
+          start: "2015", end: "2017", tags: ["brand", "ua"],
+          strategy: ["콘텐츠 개선과 연계해 리런칭하고 ‘개념 FPS’로 브랜드를 다시 정의"],
+          execution: ["GM 캐릭터화와 커뮤니티 콘텐츠 기획"],
+          results: [{ text: "리뉴얼 후 신규 이용자(NRU)와 방문자(UV) 각각 64% 증가" }]
         },
         {
-          id: "nc-bns2", title: "블레이드앤소울2 출시 마케팅",
-          start: "2018-04", end: "2019-11", tags: ["launch", "brand", "ip"],
-          scope: ["출시 TFT 마케팅 담당: 최초 공개 쇼케이스, 트레일러, BI, 웹페이지 기획 및 제작", "2차 확산용 바이럴 콘텐츠, SEO 캠페인, 신규 사전예약 모델 개발"],
-          approach: ["\"왜 블소의 정식 후속작인가\"를 사전 커뮤니케이션 핵심 과제로 설정해 기존 팬덤의 우호도 형성"],
+          id: "nw-live", title: "A.V.A·슬러거: 라이브 마케팅",
+          start: "2015", end: "2017", tags: ["ua"],
+          execution: ["A.V.A: 성수기 슈퍼솔저 캠페인, 영화 티징 방식의 브랜드 환기", "슬러거: KBO 리그 시즌 연계 캠페인"],
           results: [
-            { text: "트레일러 공개 1시간 만에 조회수 20만" },
-            { text: "Google과 영상 시청 후 게임 설치로 이어지는 신규 사전예약 모델 공동 개발" }
+            { text: "A.V.A: 휴면 이용자 복귀율 20% 증가" },
+            { text: "슬러거: 캠페인 기간 휴면 이용자 64% 재활성화" }
           ]
         },
         {
-          id: "nc-h2", title: "프로야구 H2 시즌 마케팅",
-          start: "2017-04", end: "2018-03", tags: ["live", "crm", "brand"],
-          scope: ["업데이트별 시즌 마케팅과 KBO 개막 시즌 캠페인", "올스타전 이벤트 및 랭킹전 프로모션 기획·운영"],
-          approach: ["레전드 3인을 활용한 웹툰 작화 크리에이티브, 유튜브 커스텀팩·스포츠 중계 가상광고로 리런칭 규모 캠페인 집행"],
-          results: [{ text: "KBO 개막 캠페인으로 DAU 2.2배 증가" }]
+          id: "nw-btl", title: "전사 BTL: 전시, 컨퍼런스, 사업설명회, 쇼케이스",
+          start: "2012", end: "2016", tags: ["btl"],
+          role: ["지스타 B2C·B2B 전시관, 전사 컨퍼런스, 사업설명회, 쇼케이스, e스포츠 리그 기획·운영 총괄"],
+          execution: [
+            "지스타 전시관(2012~2014), 기술공유 컨퍼런스 NOC(2013), 글로벌 소셜플랫폼 컨퍼런스(2012), 모바일 사업설명회(2014)",
+            "레이더즈, 애스커, BLESS, 온그린 출시 쇼케이스와 이용자 초청 행사",
+            "블랙스쿼드 방송리그, FIFA 온라인2 현대자동차컵 챔피언십(2012) 등 e스포츠"
+          ],
+          results: [
+            { text: "지스타 2012 BLESS 80부스 체험관, 관람객 투표 ‘가장 인상적인 부스’ 3위" },
+            { text: "지스타 2013 B2B관과 바이어 프로그램 운영, 사업·홍보 조직과 협업해 대만 수출 계약에 기여" }
+          ]
         },
         {
-          id: "nc-lineagem", title: "리니지M 론칭 ASO·SEO",
-          start: "2017-04", end: "2017-12", tags: ["launch", "performance", "data"],
-          scope: ["리니지M 론칭 시 ASO, SEO 및 성과 지표 관리"],
-          approach: ["키워드 리서치, 메타데이터 최적화, 아이콘·스크린샷 A/B 테스트"],
-          results: [{ text: "스토어 전환율 개선, 양대 마켓 인기·매출 1위 달성에 기여" }]
+          id: "nw-partnership", title: "브랜드 제휴·스폰서십: 이종 산업 공동 마케팅",
+          start: "2012", end: "2016", tags: ["btl"],
+          execution: [
+            "현대자동차×FIFA 온라인2, 기아자동차 모터쇼×슬러거, 인텔×BLESS 기술·마케팅 제휴, TG삼보×BLESS PC",
+            "레이저, 플랜트로닉스, 로지텍, Kappa 등과 공동 프로모션, LG전자·삼성전자 e스포츠 리그 스폰서십"
+          ],
+          results: [
+            { text: "자동차, IT, 패션, 식음료 등 이종 산업 브랜드와 공동 마케팅과 스폰서십 운영" },
+            { text: "제휴 조건과 계약 협상, 게임 콘텐츠와 연계한 프로모션 운영" }
+          ]
+        },
+        {
+          id: "nw-ppl", title: "인도스먼트·PPL: 콘텐츠와 모델 계약 전략",
+          start: "2012", end: "2015", tags: ["btl", "brand"],
+          strategy: ["타깃 관심사에 맞춰 방송, 연예인, 스포츠 선수와 연계한 콘텐츠와 인게임 아이템 기획"],
+          execution: [
+            "청풍명월×이경규 출조 방송, 야구의신×원자현 튜토리얼, 스페셜포스×장혁·샘 해밍턴 인게임 아이템",
+            "야구 전문 방송과 중계 채널 연계 PPL"
+          ],
+          results: [{ text: "슬러거×추신수 모델 계약에 아이템 판매 수익배분 방식을 제안해 모델 비용 부담을 크게 낮춤" }]
         }
       ]
     },
     {
-      company: "네오위즈게임즈", dept: "퍼블리싱마케팅팀", role: "팀장",
-      start: "2012-01", end: "2017-03",
-      summary: "PC 퍼블리싱 타이틀 라이브·리론칭 마케팅과 전사 BTL·제휴, 사회공헌 브랜드 론칭",
-      projects: [
-        {
-          id: "nw-titles", title: "퍼블리싱 타이틀 라이브·리론칭 마케팅",
-          start: "2015", end: "2017", tags: ["brand", "crm", "live"],
-          scope: ["블랙스쿼드, A.V.A, 슬러거 연간 마케팅 프로모션 기획 및 운영"],
-          results: [
-            { text: "블랙스쿼드: '개념 FPS' 브랜드 리뉴얼 캠페인으로 NRU 1.6배, UV 1.3배 증가" },
-            { text: "A.V.A: 영화 티징 형식의 슈퍼솔저 캠페인으로 휴면 유저 복귀율 20% 증가" },
-            { text: "슬러거: KBO 시즌 연계 캠페인으로 기간 내 휴면 유저 64% 재활성화" }
-          ]
-        },
-        {
-          id: "nw-partnership", title: "전사 제휴·BTL 마케팅",
-          start: "2012", end: "2016", tags: ["partnership", "btl"],
-          scope: ["현대자동차×피파온라인2, 기아자동차 모터쇼×슬러거, 인텔×BLESS, TG삼보, Kappa 등 전사 제휴", "지스타 B2C·B2B 전시관, 기술 컨퍼런스, 타이틀 쇼케이스, 블랙스쿼드 방송 리그 운영"],
-          results: [
-            { text: "자동차·IT·하드웨어·패션 브랜드와 연 단위 제휴 운영" },
-            { text: "지스타 B2B관 운영으로 BLESS 해외 판권 세일즈 지원" }
-          ]
-        },
-        {
-          id: "nw-ppl", title: "인도스먼트·PPL 콘텐츠 마케팅",
-          start: "2012", end: "2015", tags: ["partnership", "brand"],
-          scope: ["스포츠·낚시 게임 이용자 성향에 맞춘 야구 중계·낚시 채널 PPL과 방송 콘텐츠 연계", "유명 모델을 활용한 인게임 아이템 출시"],
-          approach: ["모델료 부담을 줄이기 위해 아이템 출시 후 수익을 나누는 R/S 계약 모델 제시"],
-          results: [
-            { text: "방송 연계 기간 인게임 프로모션으로 NRU 평균 30% 확보" },
-            { text: "R/S 계약 모델로 모델 비용 대폭 절감" }
-          ]
-        },
-        {
-          id: "nw-greenpmang", title: "사회공헌 브랜드 그린피망 론칭",
-          start: "2013", end: "2013", tags: ["brand"],
-          scope: ["사회공헌 브랜드 론칭 및 브랜드 사이트 오픈"],
-          results: [{ text: "게임 내 참여, 아이템 구매와 기부를 연동해 수십만 명 참여" }]
-        }
-      ]
-    },
-    {
-      company: "(주)브랜드라이브", dept: "BTL프로모션기획팀", role: "차장",
+      company: "브랜드라이브", dept: "BTL 프로모션기획팀", role: "차장",
       start: "2006-06", end: "2011-12",
-      summary: "게임·자동차·IT 브랜드 대상 전시, e스포츠, BTL 프로모션 기획 및 운영",
+      summary: "게임, IT, 자동차, 공공 분야 전시와 BTL 프로모션의 기획과 현장 운영 PM",
       projects: [
         {
-          id: "bl-btl", title: "BTL 프로모션·전시 기획 및 운영",
-          start: "2006-06", end: "2011-12", tags: ["btl", "partnership"],
+          id: "bl-expo", title: "게임 전시 및 BTL 프로모션",
+          start: "2006", end: "2011", tags: ["btl"],
+          execution: ["네오위즈게임즈, 한게임, JCE 등 지스타 주요 게임사 전시관 기획·운영", "SKT ‘T’ 프로모션, 엔트리브 기자간담회(2011)"],
           results: [
-            { text: "지스타 게임사 전시관 기획·운영 PM (2006~2011), 관람객 투표 '가장 인상적인 부스 Top3' 선정 (2009, 2011)" },
-            { text: "현대자동차컵 FIFA 온라인2 챔피언십: 온라인 예선 포함 100만 명 이상 참가" },
-            { text: "ESWC 한국 결승전(2009), IeSF 그랜드 파이널(2010) 무대 연출 및 현장 운영 총괄" },
-            { text: "현대자동차 월드컵 거리응원, 신차 쇼케이스, 서울모터쇼 폭스바겐관 운영" }
+            { text: "지스타 주요 게임사 전시관 기획·운영 (2006~2011)" },
+            { text: "2009·2011년 네오위즈 전시관, 관람객 투표 ‘가장 인상적인 부스’ Top 3" }
+          ]
+        },
+        {
+          id: "bl-auto", title: "자동차 브랜드 프로모션",
+          start: "2009", end: "2011", tags: ["btl"],
+          results: [
+            { text: "현대자동차 월드컵 거리응원 캠페인(2010), 신차 쇼케이스와 프로모션(2009~2010)" },
+            { text: "서울모터쇼 폭스바겐 전시관 운영 PM(2011)" },
+            { text: "현대자동차 전시 통합 매뉴얼 개발(2011)" }
+          ]
+        },
+        {
+          id: "bl-esports", title: "e스포츠 프로젝트",
+          start: "2009", end: "2010", tags: ["btl"],
+          results: [
+            { text: "현대자동차컵 FIFA 온라인2 챔피언십(2009)" },
+            { text: "ESWC 한국 결승전(2009), IeSF 그랜드 파이널(2010)" },
+            { text: "국제 대회 선수단, 스폰서, 글로벌 협력사 조율과 현장 운영" }
+          ]
+        },
+        {
+          id: "bl-pm", title: "복합 프로젝트 PM 및 현장 운영",
+          start: "2006", end: "2011", tags: ["btl", "org"],
+          results: [
+            { text: "클라이언트, 제작사, 운영사, 협력사 커뮤니케이션과 현장 인력 관리" },
+            { text: "국토해양부, 인천공항 등 공공·산업 분야 전시와 프로모션" },
+            { text: "전시 운영 프로세스와 매뉴얼 개발" }
           ]
         }
       ]
     }
   ],
   competencies: [
-    { icon: "layers", title: "브랜드·퍼포먼스·콘텐츠 통합 마케팅", points: ["사전 공개부터 사전예약, 론칭, 라이브까지 단계별 마케팅 로드맵 수립 및 실행", "\"리니지2M을 PC에서\" 단일 메시지로 포지셔닝과 유저 유입을 동시에 달성", "트레일러, 바이럴, PR, 커뮤니티를 연계한 크리에이티브 디렉션"] },
-    { icon: "target", title: "브랜드 포지셔닝 및 리브랜딩", points: ["자사 플랫폼 퍼플의 브랜드 전략 및 네이밍 개발", "블랙스쿼드 '개념 FPS' 리뉴얼로 NRU 1.6배", "사회공헌 브랜드 그린피망 론칭"] },
-    { icon: "funnel", title: "퍼널 기반 유저 획득·활성화", points: ["획득: 국가별 모객 단가 비교 기반 미디어 믹스, L2M 사전예약 목표 116% 달성", "전환: L2M 이용자의 퍼플 전환 목표 초과 달성", "활성화·재활성: H2 DAU 2.2배, 슬러거 휴면 유저 64% 재활성화"] },
-    { icon: "chart", title: "데이터 기반 성과 측정", points: ["캠페인 효율 측정 기준 재수립, 집행비 약 15% 절감", "광고 기여도 측정: 퍼플 다운로드 56.5%, 라이브 이용자 49.5%", "국가·매체·타깃별 유입 데이터로 UA 집행 구조 개선"] },
-    { icon: "shield", title: "커뮤니케이션 리스크 관리", points: ["게임광고 심의와 확률형 아이템 정보공개 의무화를 반영한 소재 제작 가이드", "신규 IP 출시 시 사전 공개·비공개 테스트 중심의 커뮤니케이션 설계"] },
-    { icon: "users", title: "조직·예산 리더십", points: ["글로벌마케팅실 3개 팀 18명 총괄", "100억 원대 글로벌 론칭 예산과 연간 수십억 규모 마케팅 예산 운영", "해외 지사, 해외 개발 스튜디오, 국내 개발·사업 조직 간 협업 리딩"] }
+    { icon: "layers", title: "마케팅 전략 및 신규 서비스 출시",
+      points: ["시장 세분화와 타깃 정의, 제품 USP와 포지셔닝 수립", "사전 공개부터 출시, 라이브까지 단계별 마케팅 로드맵 설계"],
+      cases: "퍼플 출시, 리니지2M 글로벌 출시, 타임테이커즈 출시 전략" },
+    { icon: "target", title: "브랜드 전략 및 크리에이티브 기획",
+      points: ["신규 브랜드 개발과 네이밍, 브랜드 리뉴얼", "핵심 메시지와 크리에이티브 브리프, 영상 기획과 제작 방향 수립"],
+      cases: "퍼플 네이밍, 블레이드앤소울2 최초 공개 트레일러, 블랙스쿼드 ‘개념 FPS’" },
+    { icon: "funnel", title: "고객획득 전략 및 성과 관리",
+      points: ["ARPU를 고려한 고객획득 목표와 투자 기준 설정", "성과 측정 기준을 정비하고, 결과에 따라 예산 배분 결정"],
+      cases: "리니지2M 국내 출시 투자 기준, Guild Wars 2 측정 기준 정비" },
+    { icon: "globe", title: "글로벌 및 통합 마케팅",
+      points: ["권역별 시장 진입 전략과 크리에이티브 현지화 방향 수립", "PR, 인플루언서, 콘텐츠, 커뮤니티를 엮은 통합 캠페인"],
+      cases: "리니지2M 북미·유럽·러시아 출시, 프로야구 H2 시즌 캠페인" },
+    { icon: "link", title: "제휴 마케팅 및 BTL",
+      points: ["이종 산업 브랜드 제휴, 스폰서십과 모델 계약 협상", "전시, 쇼케이스, 컨퍼런스, e스포츠 기획과 운영"],
+      cases: "현대자동차·인텔 등 브랜드 제휴, 지스타 전시관, 그린피망" },
+    { icon: "users", title: "조직 및 프로젝트 관리",
+      points: ["조직 구성과 역할 설계, 채용 계획 제안", "연간 예산안과 KPI를 수립해 경영진 승인 후 운영", "광고대행사 선정, 해외 스튜디오·현지 법인과의 협업 조율"],
+      cases: "엔씨소프트 마케팅 조직 운영, 위메이드 마케팅 조직 운영 체계 설계" }
   ],
-  education: { school: "한양대학교", detail: "광고홍보학 학사 · 2000–2005" },
-  recognition: "엔씨소프트 핵심인재 프로그램 K-LTI 6기(2020–2023) · 8기(2024–2027) 선정"
+  ai: {
+    track: {
+      label: "Learning · 2026 수강 중",
+      title: "AI Business Agent Track",
+      text: "기존 마케팅 전문성을 바탕으로, AI를 활용한 데이터 분석과 업무 자동화, 비즈니스 에이전트 구현 역량을 키우고 있습니다.",
+      assignment: "넷플릭스 국가별 Top 10 데이터를 활용한 글로벌 차트 진입 예측 모델. 교육 과정의 학습 과제로 진행 중입니다."
+    },
+    projects: [
+      {
+        no: "01", title: "나라장터 마케팅 용역 모니터링 도구",
+        shot: { src: "images/ai-nara-monitor.png", alt: "나라장터 공고 모니터링 화면: 오늘 신규 공고, 업종별 진행 공고, 유의미 공고, 7일 내 마감 요약과 최근 30일 업종별 공고 추이 그래프, 공고 목록" },
+        focus: ["업무 문제 정의", "기능 기획", "API 활용", "업무 자동화"],
+        problem: ["프리랜서 협업 그룹이 참여할 마케팅, 홍보, 행사 용역 공고를 매번 직접 찾아 비교해야 했음"],
+        planning: [
+          "공고를 매일 자동으로 모아 한 화면에서 보는 구성",
+          "검색과 필터, 사업 예산, 마감일과 D-Day, 관련성 별점으로 우선순위를 빠르게 판단"
+        ],
+        implementation: ["나라장터 API 연동으로 공고 수집과 일 단위 자동 갱신", "Python과 Claude Code를 활용해 HTML로 구현"],
+        delivery: ["GitHub로 배포해 프리랜서 협업 그룹에 실제 제공"],
+        value: ["협업 그룹이 참여할 만한 프로젝트를 한곳에서 찾고 판단하도록 지원"],
+        tools: ["Python", "Claude Code", "HTML", "GitHub"]
+      },
+      {
+        no: "02", title: "〈장면출고〉 예매 현황 대시보드",        focus: ["업무 데이터 활용", "정보 시각화", "운영 지원 도구"],
+        problem: ["행사 기간 공연별·회차별 예매 현황을 주관사와 빠르게 공유해야 했음"],
+        planning: ["공연별, 회차별 예약 현황과 예매율을 한눈에 보는 화면 구성"],
+        implementation: ["네이버 예약에서 내려받은 원본 데이터를 가공", "Python과 Claude Code를 활용해 웹 기반 대시보드로 구현"],
+        delivery: ["GitHub로 배포해 행사 주관사에 업무 지원 도구로 제공"],
+        value: ["회차 단위로 예매 상황을 확인해 운영 판단을 지원"],
+        tools: ["Python", "Claude Code", "HTML", "GitHub"],
+        note: "개인정보 보호를 위해 실제 화면은 공개하지 않습니다."
+      }
+    ]
+  },
+  education: { school: "한양대학교", detail: "광고홍보학 학사", period: "2000.03–2005.02" },
+  recognition: "엔씨소프트 핵심인재 프로그램 K-LTI 6기 및 8기 선정"
 };
 
 const ICONS = {
   layers: '<path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="m3 13 9 5 9-5"/>',
   target: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/>',
   funnel: '<path d="M3 5h18l-7 8v6l-4-2v-4L3 5Z"/>',
-  chart: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
-  shield: '<path d="M12 3 4 6v6c0 4.5 3.4 7.8 8 9 4.6-1.2 8-4.5 8-9V6l-8-3Z"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z"/>',
+  link: '<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2"/>',
   users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.3-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c2 .7 3.2 2.5 3.5 5.2"/>'
 };
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const ym = s => s.replace("-", ".");
 const span = (a, b) => a === b ? ym(a) : `${ym(a)}&nbsp;– ${ym(b)}`;
+const period = p => p.period ? esc(p.period) : span(p.start, p.end);
 const list = arr => arr && arr.length ? `<ul>${arr.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : "";
+const pills = arr => arr.map(t => `<span class="pill pill-sm">${esc(t)}</span>`).join("");
 const $ = id => document.getElementById(id);
 
 const allProjects = D.experience.flatMap(e => e.projects.map(p => ({ ...p, company: e.company })));
 
 const SECTIONS = [
-  ["about", "소개"], ["value", "일하는 방식"], ["competencies", "핵심 역량"],
-  ["cases", "대표 프로젝트"], ["archive", "프로젝트 아카이브"], ["career", "경력"], ["contact", "연락처"]
+  ["about", "소개"], ["value", "일하는 방식"], ["competencies", "핵심 역량"], ["cases", "대표 프로젝트"],
+  ["archive", "프로젝트 아카이브"], ["ai", "AI & Innovation"], ["career", "경력"], ["contact", "연락처"]
 ];
 
 // Nav, index
-$("topnav").innerHTML = SECTIONS.map(([id, label]) => `<a href="#${id}">${label}</a>`).join("");
+$("topnav").innerHTML = SECTIONS.map(([id, label]) => `<a href="#${id}">${esc(label)}</a>`).join("");
 $("toc").innerHTML = SECTIONS.map(([id, label], i) =>
-  `<li><a href="#${id}"><span class="num">${String(i + 1).padStart(2, "0")}</span><span>${label}</span></a></li>`).join("");
+  `<li><a href="#${id}"><span class="num">${String(i + 1).padStart(2, "0")}</span><span>${esc(label)}</span></a></li>`).join("");
 
-// About
-$("about-head").innerHTML = `<em>브랜드와 퍼포먼스</em>를<br>하나의 성과로 잇는<br>마케팅 리더`;
+// About, how I work
+$("about-head").innerHTML = D.profile.headline;
 $("about-body").innerHTML = D.profile.summary.map(p => `<p>${esc(p)}</p>`).join("");
+$("steps").innerHTML = D.steps.map(s => `<li class="step"><b>${s.k}</b><h4>${esc(s.title)}</h4><p>${esc(s.text)}</p></li>`).join("");
 
-// Competencies
+// Competencies, each tied to real projects
 $("comp").innerHTML = D.competencies.map(c => `
   <article class="comp">
     <div class="comp-icon"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[c.icon]}</svg></div>
     <h4>${esc(c.title)}</h4>
     ${list(c.points)}
+    <p class="comp-case"><b>관련 프로젝트</b>${esc(c.cases)}</p>
   </article>`).join("");
 
 // Case image; with a video, the image becomes a play link (YouTube can't be embedded, so it opens in a new tab)
 const figMedia = img => {
   const tag = `<img src="${esc(img.src)}" alt="${esc(img.alt)}" loading="lazy" style="object-position: ${esc(img.pos || "50% 50%")}">`;
+  if (img.side) return `${tag}<img class="fig-side" src="${esc(img.side.src)}" alt="${esc(img.side.alt)}" loading="lazy">`;
   if (!img.video) return tag;
   return `<a class="case-play" href="${esc(img.video.url)}" target="_blank" rel="noopener" aria-label="${esc(img.video.label)} (YouTube, 새 탭)">
     ${tag}<span class="play-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></svg></span>
     <span class="play-label">${esc(img.video.label)} · YouTube</span></a>`;
 };
 
-// Featured cases, ordered by impact
-const featuredOrder = ["nc-l2m", "nc-purple", "nc-gw2"];
+// Story fields shared by featured cases and archive details
+const FIELDS = [
+  ["background", "Background", "배경"], ["challenge", "Challenge", "과제"], ["role", "My Role", "내 역할"],
+  ["strategy", "Strategy", "전략"], ["execution", "Execution", "실행"]
+];
+const dlItem = (p, [key, en, ko], cls = "") => p[key] && p[key].length
+  ? `<div class="${cls}"><dt>${en}<span>${ko}</span></dt><dd>${list(p[key])}</dd></div>` : "";
+
+// Featured cases (5). Qualitative projects show outputs instead of numbers
+const featuredOrder = ["nc-purple", "nc-l2m", "nc-bns2", "nw-greenpmang", "nc-gw2"];
 const stat = m => `<div class="stat-val">${esc(m.value)}<small>${esc(m.unit)}</small></div><div class="stat-label">${esc(m.label)}</div>`;
 $("case-list").innerHTML = featuredOrder.map((id, i) => {
   const p = allProjects.find(x => x.id === id);
   const metrics = p.results.filter(r => r.metric);
   const notes = p.results.filter(r => !r.metric).map(r => r.text);
+  const [bg, ch, role, st, ex] = FIELDS;
   return `
   <article class="case">
-    ${p.image ? `<figure class="case-fig${p.image.fit === "contain" ? " case-fig--contain" : ""}">${figMedia(p.image)}<figcaption>${esc(p.image.credit)}</figcaption></figure>` : ""}
+    ${p.image ? `<figure class="case-fig${p.image.fit ? ` case-fig--${p.image.fit}` : ""}">${figMedia(p.image)}<figcaption>${esc(p.image.credit)}</figcaption></figure>` : ""}
+    ${p.image && p.image.more ? `<div class="case-links">${p.image.more.map(v =>
+      `<a class="case-link" href="${esc(v.url)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></svg>${esc(v.label)} · YouTube<span class="sr-only"> (새 탭)</span></a>`).join("")}</div>` : ""}
     <div class="case-main">
       <div class="case-top"><span class="pill pill-sm">Case ${String(i + 1).padStart(2, "0")}</span><span class="co">${esc(p.company)}</span></div>
       <h3>${esc(p.title)}</h3>
-      <p class="case-meta">${span(p.start, p.end)}</p>
-      <dl>
-        ${p.context && p.context.length ? `<div><dt>배경</dt><dd>${list(p.context)}</dd></div>` : ""}
-        ${p.approach && p.approach.length ? `<div><dt>접근</dt><dd>${list(p.approach)}</dd></div>` : ""}
-      </dl>
+      <p class="case-sub">${esc(p.subtitle)}</p>
+      <p class="case-meta">${period(p)}</p>
+      <div class="case-focus" aria-label="핵심역량">${pills(p.focus)}</div>
+      ${p.challenge ? `<p class="case-lead"><b>Challenge</b>${esc(p.challenge[0])}</p>` : ""}
+      <dl>${dlItem(p, role, "full role")}</dl>
+      <details class="case-more">
+        <summary>자세히 보기<span>배경, 전략, 실행</span></summary>
+        <dl>${dlItem(p, bg, "full")}${dlItem(p, st)}${dlItem(p, ex)}</dl>
+      </details>
     </div>
     <aside class="case-result" aria-label="핵심 성과">
-      <span class="pill pill-sm">Key Result</span>
-      ${metrics.map(r => `<div class="kr-metric">${stat(r.metric)}<p class="kr-cap">${esc(r.text)}</p></div>`).join("")}
+      <span class="pill pill-sm">Key Results</span>
+      ${metrics.map(r => `<div class="kr-metric">${stat(r.metric)}${r.text ? `<p class="kr-cap">${esc(r.text)}</p>` : ""}</div>`).join("")}
+      ${p.outputs ? `<ul class="kr-outputs">${p.outputs.map(o => `<li>${esc(o.title)}<small>${esc(o.note)}</small></li>`).join("")}</ul>` : ""}
       ${notes.length ? `<ul class="kr-notes">${notes.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
     </aside>
   </article>`;
 }).join("");
 
-// Archive with tag filter
+// Archive with tag filter; newest first, the first few shown until expanded
 const archiveItems = allProjects.filter(p => !featuredOrder.includes(p.id));
 const usedTags = Object.keys(D.tags).filter(t => archiveItems.some(p => p.tags.includes(t)));
+const ARCHIVE_LIMIT = 9; // the full-row poster card plus four rows of two
 let activeTag = "all";
+let expanded = false;
 function renderChips() {
   $("chips").innerHTML = [["all", "전체"], ...usedTags.map(t => [t, D.tags[t]])]
     .map(([t, label]) => `<button type="button" class="chip" id="chip-${t}" data-tag="${t}" aria-pressed="${t === activeTag}">${esc(label)}</button>`).join("");
 }
 function renderArchive() {
-  const items = archiveItems.filter(p => activeTag === "all" || p.tags.includes(activeTag));
+  const all = archiveItems.filter(p => activeTag === "all" || p.tags.includes(activeTag));
+  const items = expanded ? all : all.slice(0, ARCHIVE_LIMIT);
   $("archive-list").innerHTML = items.length ? items.map(p => {
-    const detail = [
-      p.scope && p.scope.length ? `<p class="label">담당</p>${list(p.scope)}` : "",
-      p.context && p.context.length ? `<p class="label">배경</p>${list(p.context)}` : "",
-      p.approach && p.approach.length ? `<p class="label">접근</p>${list(p.approach)}` : ""
-    ].join("");
-    const hasResults = p.results && p.results.length;
-    const main = hasResults ? list(p.results.map(r => r.text)) : list(p.scope);
-    return `
-    <article class="proj">
-      <div class="proj-meta"><b>${esc(p.company)}</b><span>${span(p.start, p.end)}</span></div>
+    const detail = FIELDS.map(([key, , ko]) => p[key] && p[key].length ? `<p class="label">${ko}</p>${list(p[key])}` : "").join("");
+    const m = p.media;
+    const body = `
+      <div class="proj-meta">${p.isNew ? `<span class="pill pill-sm pill-fill">최신</span>` : ""}<b>${esc(p.company)}</b><span>${period(p)}</span></div>
       <h4>${esc(p.title)}</h4>
-      ${main}
-      ${detail && hasResults ? `<details><summary>상세 보기</summary>${detail}</details>` : ""}
-      <div class="tags">${p.tags.map(t => `<span class="pill pill-sm">${esc(D.tags[t])}</span>`).join("")}</div>
-    </article>`;
+      ${list(p.results.map(r => r.text))}
+      ${m && m.video ? `<a class="case-link" href="${esc(m.video.url)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></svg>${esc(m.video.label)}<span class="sr-only"> (YouTube, 새 탭)</span></a>` : ""}
+      ${detail ? `<details><summary>상세 보기</summary>${detail}</details>` : ""}
+      <div class="tags">${p.tags.map(t => `<span class="pill pill-sm">${esc(D.tags[t])}</span>`).join("")}</div>`;
+    // A card with a poster spans the full row: poster on the left, text on the right
+    return m ? `
+    <article class="proj proj--wide${p.isNew ? " proj--new" : ""}" tabindex="-1">
+      <figure class="proj-poster"><img src="${esc(m.src)}" alt="${esc(m.alt)}" loading="lazy"><figcaption>${esc(m.credit)}</figcaption></figure>
+      <div class="proj-body">${body}</div>
+    </article>` : `
+    <article class="proj${p.isNew ? " proj--new" : ""}" tabindex="-1">${body}</article>`;
   }).join("") : `<p class="empty">이 분야의 프로젝트가 없습니다.</p>`;
+  const hidden = all.length - items.length;
+  $("more-wrap").innerHTML = hidden > 0 ? `<button type="button" class="btn-ghost" id="more">프로젝트 ${hidden}개 더 보기</button>` : "";
 }
 $("chips").addEventListener("click", e => {
   const b = e.target.closest(".chip");
@@ -733,19 +1097,45 @@ $("chips").addEventListener("click", e => {
   renderChips(); renderArchive();
   $("chip-" + activeTag).focus();
 });
+$("more-wrap").addEventListener("click", e => {
+  if (!e.target.closest("#more")) return;
+  expanded = true;
+  renderArchive();
+  const next = $("archive-list").children[ARCHIVE_LIMIT];
+  if (next) next.focus({ preventScroll: true });
+});
 renderChips(); renderArchive();
 
-// Career timeline, oldest first
+// AI & Innovation
+const AI_FIELDS = [["problem", "Problem", "업무 문제"], ["planning", "Planning", "기능 기획"], ["implementation", "Implementation", "구현"], ["delivery", "Delivery", "제공"], ["value", "Value", "활용 가치"]];
+const t = D.ai.track;
+$("ai-track").innerHTML = `
+  <div><span class="pill pill-sm">${esc(t.label)}</span><h3>${esc(t.title)}</h3></div>
+  <div><p>${esc(t.text)}</p><p class="ai-assign"><b>교육 과제</b> ${esc(t.assignment)}</p></div>`;
+$("ai-list").innerHTML = D.ai.projects.map(p => `
+  <article class="ai-card">
+    ${p.shot ? `<figure class="ai-shot"><a href="${esc(p.shot.src)}" target="_blank" rel="noopener" aria-label="화면 크게 보기 (새 탭)"><img src="${esc(p.shot.src)}" alt="${esc(p.shot.alt)}" loading="lazy" style="object-position: ${esc(p.shot.pos || "50% 0")}"></a><figcaption>실제 화면 · 눌러서 크게 보기</figcaption></figure>` : ""}
+    <div class="case-top"><span class="pill pill-sm">AI Project ${p.no}</span><span class="co">실제 업무에 제공</span></div>
+    <h3>${esc(p.title)}</h3>
+    <div class="case-focus" aria-label="핵심역량">${pills(p.focus)}</div>
+    <dl>${AI_FIELDS.map(f => dlItem(p, f)).join("")}</dl>
+    <div class="tags" aria-label="활용 도구">${pills(p.tools)}</div>
+    ${p.note ? `<p class="ai-note">${esc(p.note)}</p>` : ""}
+  </article>`).join("");
+
+// Career timeline, oldest first; freelance work is marked as such
 $("timeline").innerHTML = [...D.experience].reverse().map(e => `
   <li class="tl">
     <div class="tl-year">${e.start.slice(0, 4)}</div>
+    ${e.kind ? `<span class="pill pill-sm tl-kind">${esc(e.kind)}</span>` : ""}
     <h4>${esc(e.company)}</h4>
     <p class="tl-role">${esc(e.role)}</p>
+    ${e.note ? `<p class="tl-note">${esc(e.note)}</p>` : ""}
     <p class="tl-period">${esc(e.dept)}&nbsp;· ${span(e.start, e.end)}</p>
     <p class="tl-sum">${esc(e.summary)}</p>
   </li>`).join("");
 $("side-info").innerHTML = `
-  <div><span class="pill pill-sm">Education</span><p>${esc(D.education.school)} <span>${esc(D.education.detail)}</span></p></div>
+  <div><span class="pill pill-sm">Education</span><p>${esc(D.education.school)} <span class="nowrap">${esc(D.education.detail)}</span> <span class="nowrap">${esc(D.education.period)}</span></p></div>
   <div><span class="pill pill-sm">Recognition</span><p>${esc(D.recognition)}</p></div>`;
 
 // Contact
