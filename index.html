@@ -410,6 +410,32 @@ section { padding-block: 96px 0; }
 .btn-status { display: block; min-height: 1.6em; font-size: 14px; color: rgba(255, 255, 255, .85); }
 footer { padding-block: 40px; font-size: 13px; color: var(--muted); }
 
+/* Screenshot overlay */
+.lightbox {
+  position: fixed; inset: 0; z-index: 20; background: rgba(0, 14, 43, .88);
+  display: grid; place-items: center; padding: 56px 16px 24px; overflow: auto; cursor: zoom-out;
+}
+.lightbox img { max-width: min(100%, 1480px); height: auto; border-radius: 8px; background: #ffffff; cursor: default; }
+.lightbox-close {
+  position: fixed; top: 12px; right: 16px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+  background: var(--white); color: var(--black); border: 0; border-radius: 999px; padding: 8px 18px;
+}
+
+/* Print / PDF: keep colors, drop navigation and buttons, keep cards whole on a page */
+@media print {
+  @page { size: A4; margin: 10mm; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; zoom: .85; }
+  .topbar, #index, .more-wrap, .btn, .btn-status, .case-more summary, .proj summary, .sec-end, .chips { display: none !important; }
+  section { padding-block: 40px 0; }
+  .case-more[open] summary { margin: 0; }
+  /* Only small blocks stay whole; long cards may continue on the next page instead of leaving gaps */
+  .hero-card, .value, .comp, .case-result, .proj, .ai-track, .tl, .side-info > div, .contact, .step, .case dl > div, .ai-card dl > div, .case-lead { break-inside: avoid; }
+  .case-fig { break-inside: avoid; break-after: avoid; }
+  .sec-head { break-after: avoid; }
+  .proj--new { box-shadow: none; border: 2px solid var(--blue); }
+  .hero-name span { animation: none; }
+}
+
 /* Load moment: name lines rise in from a visible state */
 @media (prefers-reduced-motion: no-preference) {
   .hero-name span { animation: rise .7s cubic-bezier(.2,.7,.2,1) both; }
@@ -1163,6 +1189,33 @@ $("copy").addEventListener("click", () => {
       .catch(fallback);
   } catch (err) { fallback(); }
 });
+
+// Screenshot zoom: open the full image in an overlay (a new tab can't open embedded images in the single-file version)
+document.addEventListener("click", e => {
+  const a = e.target.closest(".ai-shot a");
+  if (!a) return;
+  e.preventDefault();
+  const box = document.createElement("div");
+  box.className = "lightbox";
+  box.setAttribute("role", "dialog");
+  box.setAttribute("aria-label", "화면 크게 보기");
+  box.innerHTML = `<img src="${a.getAttribute("href")}" alt="${esc(a.querySelector("img").alt)}"><button type="button" class="lightbox-close">닫기</button>`;
+  const close = () => { box.remove(); removeEventListener("keydown", onKey); a.focus(); };
+  const onKey = ev => { if (ev.key === "Escape") close(); };
+  box.addEventListener("click", ev => { if (ev.target === box || ev.target.closest(".lightbox-close")) close(); });
+  addEventListener("keydown", onKey);
+  document.body.append(box);
+  box.querySelector(".lightbox-close").focus();
+});
+
+// Print / PDF: show every archive card, open folded details and load all images
+function prepPrint() {
+  if (!expanded) { expanded = true; renderArchive(); }
+  document.querySelectorAll("details").forEach(d => { d.open = true; });
+  document.querySelectorAll('img[loading="lazy"]').forEach(i => { i.loading = "eager"; });
+}
+addEventListener("beforeprint", prepPrint);
+if (new URLSearchParams(location.search).has("print")) prepPrint();
 </script>
 
 </body>
