@@ -359,7 +359,7 @@ section { padding-block: 96px 0; }
 .ai-shot figcaption { pointer-events: none; }
 .ai-shot img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; display: block; }
 .ai-shot figcaption {
-  position: absolute; right: 10px; bottom: 10px; font-size: 11px; color: var(--white);
+  position: absolute; right: 10px; top: 10px; font-size: 11px; color: var(--white);
   background: rgba(0, 14, 43, .6); padding: 2px 8px; border-radius: 999px;
 }
 .ai-card h3 { margin: 0; font-size: clamp(20px, 2.2vw, 24px); line-height: 1.35; }
@@ -952,14 +952,15 @@ const D = {
         tools: ["Python", "Claude Code", "HTML", "GitHub"]
       },
       {
-        no: "02", title: "〈장면출고〉 예매 현황 대시보드",        focus: ["업무 데이터 활용", "정보 시각화", "운영 지원 도구"],
+        no: "02", title: "〈장면출고〉 예매 현황 대시보드",
+        shot: { src: "images/ai-booking-dashboard.webp", caption: "행사 기간 중 화면", pos: "50% 100%", alt: "장면출고 예매 현황 대시보드의 행사 기간 중 화면: 회차별 예매 좌석과 예매율, 누적 예매완료 그래프, 일별 신청·취소 그래프, 공연별 예매율과 프로그램 구분별 합계" },        focus: ["업무 데이터 활용", "정보 시각화", "운영 지원 도구"],
         problem: ["행사 기간 공연별·회차별 예매 현황을 주관사와 빠르게 공유해야 했음"],
-        planning: ["공연별, 회차별 예약 현황과 예매율을 한눈에 보는 화면 구성"],
+        planning: ["공연별·회차별 예약 현황과 예매율, 유입 경로를 한눈에 보는 화면 구성"],
         implementation: ["네이버 예약에서 내려받은 원본 데이터를 가공", "Python과 Claude Code를 활용해 웹 기반 대시보드로 구현"],
         delivery: ["GitHub로 배포해 행사 주관사에 업무 지원 도구로 제공"],
         value: ["회차 단위로 예매 상황을 확인해 운영 판단을 지원"],
         tools: ["Python", "Claude Code", "HTML", "GitHub"],
-        note: "개인정보 보호를 위해 실제 화면은 공개하지 않습니다."
+        note: "관객 개인정보 없이 회차별 집계만 표시"
       }
     ]
   },
@@ -1121,7 +1122,7 @@ $("ai-track").innerHTML = `
   <div><p>AI 데이터 분석, 업무 자동화, 비즈니스 에이전트 구현</p></div>`;
 $("ai-list").innerHTML = D.ai.projects.map(p => `
   <article class="ai-card">
-    ${p.shot ? `<figure class="ai-shot"><a href="${esc(p.shot.src)}" target="_blank" rel="noopener" aria-label="화면 크게 보기 (새 탭)"><img src="${esc(p.shot.src)}" alt="${esc(p.shot.alt)}" loading="lazy" style="object-position: ${esc(p.shot.pos || "50% 0")}"></a><figcaption>실제 화면 · 눌러서 크게 보기</figcaption></figure>` : ""}
+    ${p.shot ? `<figure class="ai-shot"><a href="${esc(p.shot.src)}" target="_blank" rel="noopener" aria-label="화면 크게 보기 (새 탭)"><img src="${esc(p.shot.src)}" alt="${esc(p.shot.alt)}" loading="lazy" style="object-position: ${esc(p.shot.pos || "50% 0")}"></a><figcaption>${esc(p.shot.caption || "실제 화면")} · 눌러서 크게 보기</figcaption></figure>` : ""}
     <div class="case-top"><span class="pill pill-sm">AI Project ${p.no}</span><span class="co">실제 업무에 제공</span></div>
     <h3>${esc(p.title)}</h3>
     <dl>${aiBlock("문제", p.problem.slice(0, 1))}${aiBlock("만든 것", [...p.planning, ...p.implementation].slice(0, 2))}${aiBlock("결과", p.delivery)}</dl>
