@@ -339,11 +339,11 @@ section { padding-block: 96px 0; }
 
 /* AI & Innovation */
 .ai-track {
-  background: var(--navy); color: var(--white); border-radius: var(--radius-lg); padding: 36px;
-  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: 32px; align-items: start; margin-bottom: 16px;
+  background: var(--navy); color: var(--white); border-radius: var(--radius-lg); padding: 24px 32px;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: 32px; align-items: center; margin-bottom: 16px;
 }
 .ai-track .pill { color: var(--on-dark-muted); }
-.ai-track h3 { margin: 14px 0 0; font-size: clamp(22px, 2.6vw, 28px); line-height: 1.3; }
+.ai-track h3 { margin: 8px 0 0; font-size: clamp(22px, 2.6vw, 28px); line-height: 1.3; }
 .ai-track p { margin: 0; color: var(--on-dark-muted); }
 .ai-track .ai-assign { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, .18); font-size: 14.5px; }
 .ai-track .ai-assign b { color: var(--white); font-weight: 700; }
@@ -467,7 +467,6 @@ footer { padding-block: 40px; font-size: 13px; color: var(--muted); }
         <p class="hero-tagline">시장과 고객을 읽고,<br>브랜드와 실행 전략으로 연결합니다</p>
         <h1 class="hero-name" aria-label="한다래 HAN DA RAE"><span>HAN</span><span>DA</span><span>RAE</span></h1>
         <p class="hero-role"><span class="nowrap">Brand Strategy&nbsp;·</span> <span class="nowrap">Integrated Marketing&nbsp;·</span> <span class="nowrap">Creative Planning</span></p>
-        <p class="hero-intro">게임, 콘텐츠, 플랫폼 분야에서 제품의 경쟁력을 정의하고,<br class="br-desk"> 브랜드 메시지와 크리에이티브, 실행 계획으로 구체화해<br class="br-desk"> <em>신규 서비스의 출시와 성장</em>을 이끌어 왔습니다.</p>
         <div class="hero-stats">
           <div class="hero-stat"><b>19</b><small>YEARS IN MARKETING</small></div>        </div>
       </div>
@@ -519,7 +518,7 @@ footer { padding-block: 40px; font-size: 13px; color: var(--muted); }
 
   <section id="ai"><div class="wrap">
     <div class="sec-head"><span class="pill">AI &amp; Innovation</span><h2 class="sec-title">AI로 넓히는 일하는 방식</h2></div>
-    <p class="sec-lead">마케팅 실무에서 생긴 문제를 직접 정의하고, 필요한 기능을 기획해 AI로 구현한 뒤 실제 업무에 쓰고 있습니다. 개발자로의 전환이 아니라, 기존 전문성을 더 빠르고 정확하게 쓰기 위한 확장입니다.</p>
+    <p class="sec-lead">업무에서 생긴 문제를 직접 정의하고, 필요한 도구를 AI로 만들어 실제 업무에 쓰고 있습니다.</p>
     <div class="ai-track" id="ai-track"></div>
     <div class="ai-grid" id="ai-list"></div>
     <span class="sec-end" aria-hidden="true"></span>
@@ -1117,20 +1116,18 @@ $("more-wrap").addEventListener("click", e => {
 renderChips(); renderArchive();
 
 // AI & Innovation
-const AI_FIELDS = [["problem", "Problem", "업무 문제"], ["planning", "Planning", "기능 기획"], ["implementation", "Implementation", "구현"], ["delivery", "Delivery", "제공"], ["value", "Value", "활용 가치"]];
 const t = D.ai.track;
+const aiBlock = (label, arr) => `<div><dt>${label}</dt><dd>${list(arr)}</dd></div>`;
 $("ai-track").innerHTML = `
   <div><span class="pill pill-sm">${esc(t.label)}</span><h3>${esc(t.title)}</h3></div>
-  <div><p>${esc(t.text)}</p><p class="ai-assign"><b>교육 과제</b> ${esc(t.assignment)}</p></div>`;
+  <div><p>AI 데이터 분석, 업무 자동화, 비즈니스 에이전트 구현</p></div>`;
 $("ai-list").innerHTML = D.ai.projects.map(p => `
   <article class="ai-card">
     ${p.shot ? `<figure class="ai-shot"><a href="${esc(p.shot.src)}" target="_blank" rel="noopener" aria-label="화면 크게 보기 (새 탭)"><img src="${esc(p.shot.src)}" alt="${esc(p.shot.alt)}" loading="lazy" style="object-position: ${esc(p.shot.pos || "50% 0")}"></a><figcaption>실제 화면 · 눌러서 크게 보기</figcaption></figure>` : ""}
     <div class="case-top"><span class="pill pill-sm">AI Project ${p.no}</span><span class="co">실제 업무에 제공</span></div>
     <h3>${esc(p.title)}</h3>
-    <div class="case-focus" aria-label="핵심역량">${pills(p.focus)}</div>
-    <dl>${AI_FIELDS.map(f => dlItem(p, f)).join("")}</dl>
-    <div class="tags" aria-label="활용 도구">${pills(p.tools)}</div>
-    ${p.note ? `<p class="ai-note">${esc(p.note)}</p>` : ""}
+    <dl>${aiBlock("문제", p.problem.slice(0, 1))}${aiBlock("만든 것", [...p.planning, ...p.implementation].slice(0, 2))}${aiBlock("결과", p.delivery)}</dl>
+    <p class="ai-note">Python·Claude Code로 구현${p.note ? ` · ${esc(p.note)}` : ""}</p>
   </article>`).join("");
 
 // Career timeline, oldest first; freelance work is marked as such
