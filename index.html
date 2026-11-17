@@ -451,6 +451,53 @@ footer { padding-block: 40px; font-size: 13px; color: var(--muted); }
   .contact { grid-template-columns: minmax(0, 1fr); padding: 40px 24px; gap: 28px; }
 }
 </style>
+<!-- GA4: loads only on the published site, never in local previews, the PDF deck or the single-file copy -->
+<script>
+(function () {
+  var GA_ID = "G-4TPDZD6JR1";
+  if (location.hostname !== "noriko-8138.github.io") return;
+  var s = document.createElement("script");
+  s.async = true; s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID;
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { dataLayer.push(arguments); };
+  gtag("js", new Date());
+  gtag("config", GA_ID);
+  var ev = function (name, params) { gtag("event", name, params || {}); };
+  var titleOf = function (el) {
+    var card = el.closest("article");
+    var h = card && card.querySelector("h3, h4");
+    return h ? h.textContent.trim().slice(0, 100) : "";
+  };
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest("a, button");
+    if (!a) return;
+    var href = a.getAttribute("href") || "";
+    if (/youtube\.com|youtu\.be/.test(href)) ev("video_click", { project: titleOf(a), link_text: a.textContent.trim().slice(0, 100) });
+    else if (a.closest(".case-fig, .proj-poster, .ai-shot")) ev("image_open", { project: titleOf(a) });
+    else if (a.classList.contains("chip")) ev("archive_filter", { filter: a.textContent.trim() });
+    else if (a.id === "more") ev("archive_more");
+    else if (a.id === "copy") ev("contact_copy_email");
+    else if (href.indexOf("mailto:") === 0) ev("contact_email_click");
+    else if (a.closest("#topnav")) ev("nav_click", { section: a.textContent.trim() });
+  }, true);
+  document.addEventListener("toggle", function (e) {
+    var d = e.target;
+    if (d.tagName === "DETAILS" && d.open) ev("project_detail_open", { project: titleOf(d), area: d.classList.contains("case-more") ? "featured" : "archive" });
+  }, true);
+  addEventListener("load", function () {
+    if (!("IntersectionObserver" in window)) return;
+    var seen = {};
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var id = en.target.id;
+        if (en.isIntersecting && !seen[id]) { seen[id] = 1; ev("section_view", { section: id }); io.unobserve(en.target); }
+      });
+    }, { rootMargin: "-45% 0px -45% 0px" });
+    document.querySelectorAll("section[id]").forEach(function (sec) { io.observe(sec); });
+  });
+})();
+</script>
 </head>
 <body>
 <header class="topbar">
